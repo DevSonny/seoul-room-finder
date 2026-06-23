@@ -123,6 +123,35 @@ def near_target_line(station_str, lat, lng):
     return False
 
 
+def reverse_geocode(lat, lng):
+    url = f"https://nominatim.openstreetmap.org/reverse?lat={lat}&lon={lng}&format=json&accept-language=ko"
+    req = urllib.request.Request(url, headers={'User-Agent': 'seoul-room-finder/1.0 (contact: devsonny@gmail.com)'})
+    try:
+        with urllib.request.urlopen(req) as response:
+            data = json.loads(response.read().decode('utf-8'))
+            address = data.get('address', {})
+            
+            state = address.get('state', address.get('city', ''))
+            city_district = address.get('city_district', address.get('county', address.get('borough', '')))
+            suburb = address.get('quarter', address.get('suburb', ''))
+            road = address.get('road', '')
+            house_number = address.get('house_number', '')
+            
+            parts = [state, city_district, suburb, road, house_number]
+            parts = [p for p in parts if p]
+            
+            if len(parts) >= 3:
+                return " ".join(parts)
+            else:
+                display_name = data.get('display_name', '')
+                if display_name:
+                    return display_name
+                return ""
+    except Exception as e:
+        print(f"Error geocoding {lat},{lng}: {e}")
+        return ""
+
+
 def dedup_by_key(listings, key_fn):
     seen = set()
     out = []
@@ -380,7 +409,7 @@ def fetch_ziptoss():
             nearest_stn = building.get("nearestStation") or ""  # e.g. "외대앞역"
             dong = building.get("dong") or ""
             sigungu = building.get("sigungu") or ""
-            address = f"{sigungu} {dong}".strip()
+            address_fallback = f"{sigungu} {dong}".strip()
             prop_type = building.get("type") or "Studio"
 
             # Exclude share houses and goshiwons from Ziptoss
@@ -391,6 +420,12 @@ def fetch_ziptoss():
             coords = (building.get("point") or {}).get("coordinates") or [0, 0]
             lng = float(coords[0]) if len(coords) > 1 else 0
             lat = float(coords[1]) if len(coords) > 1 else 0
+
+            address = reverse_geocode(lat, lng) if (lat and lng) else address_fallback
+            if not address:
+                address = address_fallback
+            if lat and lng:
+                time.sleep(1.2) # Rate limit
 
             size_m2 = float(prop.get("area") or 0)
             options_raw = prop.get("options") or []
@@ -406,17 +441,7 @@ def fetch_ziptoss():
             if not near_target_line(nearest_stn, lat, lng):
                 continue
 
-            # Fetch building key for direct building page link
-            bkey = ""
-            try:
-                bkey_url = f"https://ziptoss.com/api/sd/properties/{pid}"
-                bkey_data = _get(bkey_url)
-                bkey = (bkey_data.get("building") or {}).get("key", "")
-                time.sleep(random.uniform(0.3, 0.5))
-            except Exception:
-                pass
-            link = (f"https://ziptoss.com/en/building/{bkey}" if bkey
-                    else "https://ziptoss.com/en/map/" + quote(nearest_stn or stn) + "?contract=monthly")
+            link = "https://ziptoss.com/en/map/" + quote(nearest_stn or stn) + "?contract=monthly"
 
             seen_ids.add(pid)
             listings.append({
@@ -438,7 +463,9 @@ def fetch_ziptoss():
                 "options": options_str,
                 "english": "Yes — English site, English contract",
                 "link": link,
-                "naver": "https://map.naver.com/p/search/" + quote(address if address else stn),
+                "naver": f"https://map.naver.com/p/search/{lat},{lng}" if (lat and lng) else "https://map.naver.com/p/search/" + quote(address if address else stn),
+                "lat": lat,
+                "lng": lng,
                 "rent": f"₩{rent_monthly:,} / mo",
                 "total_display": f"₩{total_monthly:,} / mo",
                 "deposit_display": f"₩{deposit:,}",
