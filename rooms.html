@@ -1,7 +1,10 @@
-<title>Seoul Room Finder · Kyung Hee University Exchange</title>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Seoul Room Finder · KHU Exchange</title>
 <style>
-/* ---- tokens ---- */
 :root {
   --ground:  #F5F4F0;
   --panel:   #ECEAE4;
@@ -15,19 +18,20 @@
   --both:    #6B3A8E;
   --good:    #1A7A4A;
   --good-bg: #E8F5EE;
-  --mid:     #7A5000;
+  --warn:    #7A5000;
   --warn-bg: #FEF8E8;
   --warn-bd: #E8C44A;
-  --mono: 'Courier New', 'Lucida Console', 'Menlo', monospace;
+  --err:     #9B1C1C;
+  --err-bg:  #FEF2F2;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'Courier New', 'Lucida Console', monospace;
 }
-
-/* ---- reset ---- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
   background: var(--ground);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font);
   font-size: 15px;
   line-height: 1.56;
   -webkit-text-size-adjust: 100%;
@@ -35,208 +39,252 @@ body {
 a { color: var(--l1); text-decoration: none; font-weight: 600; }
 a:hover { text-decoration: underline; }
 a:focus-visible { outline: 2px solid var(--l1); outline-offset: 2px; border-radius: 2px; }
+button { font-family: var(--font); cursor: pointer; }
 
-/* ---- metro stripe ---- */
-.metro-stripe { height: 5px; display: flex; position: sticky; top: 0; z-index: 200; }
-.ms-l1   { background: var(--l1); flex: 3; }
+/* stripe */
+.metro-stripe { height: 5px; display: flex; position: sticky; top: 0; z-index: 300; }
+.ms-l1 { background: var(--l1); flex: 3; }
 .ms-both { background: var(--both); flex: 0.5; }
-.ms-l6   { background: var(--l6); flex: 2; }
+.ms-l6 { background: var(--l6); flex: 2; }
 
-/* ---- layout ---- */
-.wrap { max-width: 1080px; margin: 0 auto; padding: 0 18px 80px; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px 80px; }
 
-/* ---- header ---- */
-header { padding: 36px 0 30px; }
+/* header */
+header { padding: 32px 0 26px; }
 .eyebrow {
+  font-size: 10.5px; letter-spacing: 0.13em; color: var(--muted);
+  text-transform: uppercase; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
   font-family: var(--mono);
-  font-size: 10.5px; letter-spacing: 0.13em;
-  color: var(--muted); text-transform: uppercase;
-  margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
 }
 .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--l1); flex-shrink: 0; }
 header h1 {
-  font-size: clamp(30px, 6vw, 52px);
-  font-weight: 800; letter-spacing: -0.03em; line-height: 1.02; color: var(--deep);
+  font-size: clamp(28px, 5.5vw, 48px); font-weight: 800;
+  letter-spacing: -0.03em; line-height: 1.02; color: var(--deep);
 }
 header h1 .hl { color: var(--l1); }
-.header-sub { color: var(--muted); margin-top: 11px; font-size: 15.5px; max-width: 60ch; }
+.header-sub { color: var(--muted); margin-top: 10px; font-size: 15px; max-width: 62ch; }
 
-/* ---- departure board ---- */
+/* board */
 .board {
   background: var(--deep); border-radius: 16px;
-  margin: 24px 0 36px; overflow: hidden; position: relative;
+  margin: 22px 0 28px; overflow: hidden;
 }
 .board-label {
-  font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase;
-  color: rgba(255,255,255,0.25); padding: 14px 22px 0;
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: rgba(255,255,255,0.25); padding: 13px 20px 0;
 }
 .board-stats { display: grid; grid-template-columns: repeat(4, 1fr); }
-.bs { padding: 18px 22px 22px; border-right: 1px solid rgba(255,255,255,0.08); }
+.bs { padding: 14px 20px 20px; border-right: 1px solid rgba(255,255,255,0.08); }
 .bs:last-child { border-right: none; }
 .bs-label {
-  font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em;
-  text-transform: uppercase; color: rgba(255,255,255,0.38); margin-bottom: 7px;
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.11em;
+  text-transform: uppercase; color: rgba(255,255,255,0.38); margin-bottom: 6px;
 }
-.bs-val {
-  font-size: clamp(24px, 3.8vw, 38px);
-  font-weight: 800; letter-spacing: -0.025em; line-height: 1; color: #F5F4F0;
-}
+.bs-val { font-size: clamp(22px, 3.5vw, 36px); font-weight: 800; letter-spacing: -0.025em; line-height: 1; color: #F5F4F0; }
 .bs-val.al1 { color: #6DB8FF; }
 .bs-val.al6 { color: #F0A060; }
 .bs-val.ago { color: #4ADE80; }
-.bs-note {
-  font-family: var(--mono); font-size: 10.5px; color: rgba(255,255,255,0.3); margin-top: 5px;
-}
+.bs-note { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 4px; }
 .board-line { height: 4px; display: flex; }
-.bl-l1  { background: var(--l1); flex: 3; }
+.bl-l1 { background: var(--l1); flex: 3; }
 .bl-mid { background: var(--both); flex: 0.5; }
-.bl-l6  { background: var(--l6); flex: 2; }
+.bl-l6 { background: var(--l6); flex: 2; }
 
-/* ---- warn ---- */
+/* build stamp */
+.build-stamp {
+  font-family: var(--mono); font-size: 11px; color: var(--muted);
+  text-align: right; margin-top: -16px; margin-bottom: 20px;
+  letter-spacing: 0.03em;
+}
+
+/* warn */
 .warn {
   background: var(--warn-bg); border: 1px solid var(--warn-bd);
-  border-radius: 10px; padding: 11px 15px;
-  font-size: 12.5px; color: #7A5800; margin-bottom: 20px; line-height: 1.5;
+  border-radius: 10px; padding: 10px 14px;
+  font-size: 12.5px; color: var(--warn); margin-bottom: 16px;
 }
 
-/* ---- section ---- */
-section { margin: 44px 0; }
+/* section */
+section { margin: 36px 0; }
 .sh {
-  display: flex; align-items: baseline; gap: 12px;
-  padding-bottom: 10px; margin-bottom: 18px;
+  display: flex; align-items: baseline; gap: 10px;
+  padding-bottom: 9px; margin-bottom: 16px;
   border-bottom: 2px solid var(--border);
 }
-.sh h2 { font-size: 19px; font-weight: 800; letter-spacing: -0.015em; color: var(--deep); }
-.sh .stag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.07em; color: var(--muted); margin-left: auto; }
+.sh h2 { font-size: 18px; font-weight: 800; letter-spacing: -0.015em; color: var(--deep); }
+.sh .stag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; color: var(--muted); margin-left: auto; white-space: nowrap; }
 
-/* ---- featured cards ---- */
-.feat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
-.fcard {
-  background: var(--white); border: 1.5px solid var(--border);
-  border-radius: 14px; padding: 20px;
-  display: flex; flex-direction: column; gap: 13px; position: relative;
+/* controls */
+.controls {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px 16px;
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;
+  margin-bottom: 16px;
 }
-.fcard.top { border-color: var(--l1); }
-.fcard-badge {
-  position: absolute; top: -1.5px; right: 18px;
-  background: var(--l1); color: #fff;
-  font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.1em;
-  padding: 3px 9px; border-radius: 0 0 7px 7px;
-  display: flex; align-items: center; gap: 5px;
+.ctrl-group { display: flex; flex-direction: column; gap: 4px; }
+.ctrl-label { font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-family: var(--mono); }
+.ctrl-group input[type=text],
+.ctrl-group select {
+  height: 36px; padding: 0 10px; border: 1.5px solid var(--border);
+  border-radius: 8px; font-size: 13.5px; font-family: var(--font);
+  background: var(--ground); color: var(--text); min-width: 140px;
+  outline: none;
 }
-.pulse-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: #4ADE80; flex-shrink: 0;
-  animation: pulse 2s ease-out 0.6s 4;
+.ctrl-group input[type=text]:focus,
+.ctrl-group select:focus { border-color: var(--l1); background: var(--white); }
+.ctrl-group input[type=range] { width: 140px; accent-color: var(--l1); }
+.rent-val { font-family: var(--mono); font-size: 12px; color: var(--l1); font-weight: 700; }
+.btn-seg { display: flex; border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden; }
+.btn-seg button {
+  padding: 0 12px; height: 36px; border: none; background: var(--ground);
+  font-size: 13px; font-weight: 600; color: var(--muted);
+  border-right: 1px solid var(--border); transition: background 0.1s, color 0.1s;
 }
-@keyframes pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(74,222,128,.7); }
-  70%  { box-shadow: 0 0 0 7px rgba(74,222,128,0); }
-  100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); }
-}
-@media (prefers-reduced-motion: reduce) { .pulse-dot { animation: none; } }
-.fcard-name  { font-size: 14.5px; font-weight: 700; color: var(--deep); }
-.fcard-plat  { font-family: var(--mono); font-size: 10.5px; color: var(--muted); letter-spacing: 0.05em; }
-.fcard-price {
-  font-family: var(--mono);
-  font-size: clamp(22px, 3.5vw, 30px); font-weight: 700;
-  color: var(--l1); letter-spacing: -0.02em; line-height: 1;
-}
-.fcard-price sup { font-size: 13px; letter-spacing: 0; }
-.fcard-price .pm { font-size: 12px; color: var(--muted); font-weight: 400; }
-.fcard-details { font-size: 13px; color: var(--muted); line-height: 1.65; }
-.fcard-details strong { color: var(--text); }
-.fcard-tags { display: flex; gap: 6px; flex-wrap: wrap; }
-.pill {
-  font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.06em;
-  padding: 3px 9px; border-radius: 999px;
-  background: var(--panel); color: var(--muted);
-}
-.pill.ok { background: var(--good-bg); color: var(--good); }
-.pill.l1 { background: #E4EEF8; color: var(--l1); }
-.fcard-links { display: flex; gap: 9px; flex-wrap: wrap; margin-top: auto; }
-
-/* ---- buttons ---- */
+.btn-seg button:last-child { border-right: none; }
+.btn-seg button.active { background: var(--l1); color: #fff; }
+.ctrl-spacer { flex: 1; min-width: 16px; }
 .btn {
   display: inline-flex; align-items: center; gap: 5px;
-  padding: 7px 15px; border-radius: 8px;
-  font-size: 13px; font-weight: 600; font-family: inherit;
+  padding: 0 14px; height: 36px; border-radius: 8px;
+  font-size: 13px; font-weight: 600; font-family: var(--font);
   border: 1.5px solid; cursor: pointer; text-decoration: none;
-  transition: background 0.12s, color 0.12s;
+  white-space: nowrap; transition: background 0.12s, color 0.12s;
 }
 .btn:hover { text-decoration: none; }
 .btn-p { background: var(--l1); border-color: var(--l1); color: #fff; }
-.btn-p:hover { background: #003d7a; border-color: #003d7a; color: #fff; }
+.btn-p:hover { background: #003d7a; border-color: #003d7a; }
 .btn-g { background: transparent; border-color: var(--border); color: var(--text); }
 .btn-g:hover { background: var(--panel); }
+.btn-xl { background: var(--good); border-color: var(--good); color: #fff; }
+.btn-xl:hover { background: #155e3a; border-color: #155e3a; }
 
-/* ---- line dots ---- */
-.linedot {
-  width: 20px; height: 20px; border-radius: 50%;
-  display: inline-flex; align-items: center; justify-content: center;
-  font-family: var(--mono); font-size: 8px; font-weight: 900; color: #fff;
-  flex-shrink: 0;
+/* result stats */
+.result-bar {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px; flex-wrap: wrap;
 }
-.ld-l1   { background: var(--l1); }
-.ld-l6   { background: var(--l6); }
-.ld-both { background: linear-gradient(135deg, var(--l1) 50%, var(--l6) 50%); }
+.result-count { font-size: 13px; color: var(--muted); font-family: var(--mono); }
+.result-count strong { color: var(--text); font-weight: 700; }
 
-/* ---- tables ---- */
+/* table */
 .twrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 13px; background: var(--white); }
-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
 thead th {
   background: var(--panel); color: var(--muted);
   font-family: var(--mono); font-size: 9.5px; font-weight: 700;
   letter-spacing: 0.09em; text-transform: uppercase;
-  text-align: left; padding: 9px 13px;
-  border-bottom: 1px solid var(--border); white-space: nowrap;
+  text-align: left; padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap; user-select: none;
 }
-td { padding: 11px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+thead th.sortable { cursor: pointer; }
+thead th.sortable:hover { color: var(--l1); }
+thead th.sort-asc::after { content: ' ↑'; color: var(--l1); }
+thead th.sort-desc::after { content: ' ↓'; color: var(--l1); }
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.45; }
 tr:last-child td { border-bottom: none; }
 tbody tr:hover td { background: var(--ground); }
-td.mono { font-family: var(--mono); font-size: 13px; }
-.cn { color: var(--good); font-weight: 700; }
-.cm { color: var(--mid); }
-.area-cell { display: flex; align-items: center; gap: 9px; }
-.area-name { font-weight: 700; color: var(--deep); font-size: 13.5px; line-height: 1.3; }
-.area-ko   { font-size: 11.5px; color: var(--muted); font-weight: 400; }
+td.mono { font-family: var(--mono); font-size: 12.5px; }
+.rent-cell { font-family: var(--mono); font-size: 15px; font-weight: 700; color: var(--l1); white-space: nowrap; }
+.dep-cell { font-family: var(--mono); font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+.commute-ok { color: var(--good); font-weight: 700; }
+.commute-mid { color: var(--warn); }
+.linedot {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 50%;
+  font-family: var(--mono); font-size: 8px; font-weight: 900; color: #fff; flex-shrink: 0;
+}
+.ld-1 { background: var(--l1); }
+.ld-6 { background: var(--l6); }
+.ld-16 { background: linear-gradient(135deg, var(--l1) 50%, var(--l6) 50%); }
+.station-cell { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.flag {
+  display: inline-block; font-size: 9.5px; font-weight: 700; letter-spacing: 0.05em;
+  padding: 2px 7px; border-radius: 999px; white-space: nowrap;
+  font-family: var(--mono); text-transform: uppercase;
+}
+.flag-ok    { background: var(--good-bg); color: var(--good); }
+.flag-warn  { background: var(--warn-bg); color: var(--warn); }
+.flag-err   { background: var(--err-bg); color: var(--err); }
+.opt-list { font-size: 11.5px; color: var(--muted); }
+.link-cell { display: flex; flex-direction: column; gap: 4px; }
+.link-cell a { font-size: 12.5px; white-space: nowrap; }
 
-/* ---- tips ---- */
-.tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(278px, 1fr)); gap: 14px; }
-.tip { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 17px 19px; }
+/* no results */
+.no-results {
+  text-align: center; padding: 48px 20px; color: var(--muted); font-size: 14px;
+  display: none;
+}
+
+/* pagination */
+.pager {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin-top: 14px; flex-wrap: wrap;
+}
+.pager button {
+  min-width: 36px; height: 36px; padding: 0 8px;
+  border: 1.5px solid var(--border); border-radius: 8px;
+  background: var(--white); font-size: 13px; font-weight: 600; color: var(--text);
+  transition: all 0.1s;
+}
+.pager button:hover { border-color: var(--l1); color: var(--l1); }
+.pager button.active { background: var(--l1); border-color: var(--l1); color: #fff; }
+.pager button:disabled { opacity: 0.35; cursor: not-allowed; }
+.pager-info { font-size: 12px; color: var(--muted); font-family: var(--mono); }
+
+/* launchers */
+.launcher-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.lcard {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px;
+}
+.lcard-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.lcard-head h3 { font-size: 14px; font-weight: 700; color: var(--deep); }
+.lcard-links { display: flex; flex-direction: column; gap: 6px; }
+.lcard-links a {
+  font-size: 12.5px; font-weight: 500; color: var(--text);
+  padding: 6px 10px; border-radius: 7px; background: var(--ground);
+  display: flex; align-items: center; justify-content: space-between;
+  border: 1px solid var(--border); transition: background 0.1s;
+}
+.lcard-links a:hover { background: var(--panel); text-decoration: none; color: var(--l1); }
+.lcard-links a .arrow { color: var(--muted); font-size: 11px; }
+
+/* tips */
+.tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 12px; }
+.tip { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
 .tip h3 { font-size: 13.5px; font-weight: 700; color: var(--deep); margin-bottom: 5px; }
-.tip p  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+.tip p { font-size: 13px; color: var(--muted); line-height: 1.6; }
 
-/* ---- platform check marks ---- */
-.chk  { color: var(--good); font-weight: 700; }
-
-/* ---- footer ---- */
+/* footer */
 footer {
-  margin-top: 52px; padding-top: 18px; border-top: 1px solid var(--border);
-  font-family: var(--mono); font-size: 11px; color: var(--muted);
-  letter-spacing: 0.02em; line-height: 1.8;
+  margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border);
+  font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.8;
 }
 footer a { font-size: 11px; font-weight: 400; }
-.f-src { margin-top: 8px; }
 
-/* ---- responsive ---- */
-@media (max-width: 720px) {
+/* ---- RESPONSIVE ---- */
+@media (max-width: 760px) {
   .board-stats { grid-template-columns: 1fr 1fr; }
   .bs { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
-  .bs:nth-child(odd)        { border-right: 1px solid rgba(255,255,255,0.08) !important; }
-  .bs:nth-child(even)       { border-right: none !important; }
-  .bs:nth-last-child(-n+2)  { border-bottom: none; }
+  .bs:nth-child(odd)       { border-right: 1px solid rgba(255,255,255,0.08) !important; }
+  .bs:nth-last-child(-n+2) { border-bottom: none; }
 
-  .twrap { border: none; background: transparent; overflow: visible; }
-  table  { min-width: 0; }
-  thead  { display: none; }
+  /* table → stacked label/value cards */
+  .twrap { border: none; background: transparent; }
+  table { min-width: 0; }
+  thead { display: none; }
   table, tbody, tr, td { display: block; width: 100%; }
-  tr { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; background: var(--white); overflow: hidden; }
+  tr {
+    border: 1px solid var(--border); border-radius: 12px;
+    margin-bottom: 12px; background: var(--white); overflow: hidden;
+  }
   tbody tr:hover td { background: transparent; }
   td {
     border-bottom: 1px solid var(--border);
-    display: flex; justify-content: space-between;
-    align-items: flex-start; gap: 10px; padding: 9px 14px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 10px; padding: 9px 13px;
   }
   td:last-child { border-bottom: none; }
   td::before {
@@ -245,15 +293,26 @@ footer a { font-size: 11px; font-weight: 400; }
     text-transform: uppercase; color: var(--muted); font-weight: 700;
     flex: 0 0 38%; padding-top: 1px;
   }
-  .area-cell { flex-direction: column; gap: 4px; }
+  .rent-cell { font-size: 16px; }
+  .station-cell { flex-wrap: wrap; }
+  .link-cell { flex-direction: row; flex-wrap: wrap; }
+  .controls { flex-direction: column; align-items: stretch; }
+  .ctrl-group input[type=text],
+  .ctrl-group select { min-width: 0; width: 100%; }
+  .ctrl-group input[type=range] { width: 100%; }
+  .ctrl-spacer { display: none; }
+  .pager { gap: 4px; }
+  .pager button { min-width: 32px; height: 32px; font-size: 12px; }
 }
 
 @media (max-width: 480px) {
   .board-stats { grid-template-columns: 1fr; }
   .bs, .bs:nth-child(odd), .bs:nth-child(even) {
-    border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
   }
   .bs:last-child { border-bottom: none !important; }
+  .build-stamp { text-align: left; }
 }
 </style>
 
@@ -264,329 +323,539 @@ footer a { font-size: 11px; font-weight: 400; }
 <div class="wrap">
 
   <header>
-    <p class="eyebrow"><span class="eyebrow-dot"></span>Exchange student housing guide &mdash; Seoul, Korea</p>
+    <p class="eyebrow"><span class="eyebrow-dot"></span>Exchange student housing guide — Seoul, Korea</p>
     <h1>Find a room near<br><span class="hl">Kyung Hee University</span></h1>
-    <p class="header-sub">One semester in Seoul. English-friendly platforms, Line&nbsp;1 &amp; 6, under &#8361;1,000,000&nbsp;/&nbsp;month. Sorted by price.</p>
+    <p class="header-sub">Short-stay, English-friendly, foreign card OK. Line 1 &amp; 6. Under ₩1,000,000 / month.</p>
   </header>
 
-  <div class="board" role="region" aria-label="Search constraints summary">
+  <div class="board" role="region" aria-label="Search parameters">
     <p class="board-label">Route summary</p>
     <div class="board-stats">
-      <div class="bs">
-        <p class="bs-label">Subway lines</p>
-        <p class="bs-val al1">1 &middot; 6</p>
-        <p class="bs-note">Blue (Line 1) &amp; brown (Line 6)</p>
-      </div>
-      <div class="bs">
-        <p class="bs-label">Max commute</p>
-        <p class="bs-val ago">60 min</p>
-        <p class="bs-note">to KHU Seoul Campus</p>
-      </div>
-      <div class="bs">
-        <p class="bs-label">Monthly budget</p>
-        <p class="bs-val">&#8361;1M</p>
-        <p class="bs-note">rent only &mdash; deposit separate</p>
-      </div>
-      <div class="bs">
-        <p class="bs-label">Duration</p>
-        <p class="bs-val al6">4&ndash;6 mo</p>
-        <p class="bs-note">one semester, short-stay OK</p>
-      </div>
+      <div class="bs"><p class="bs-label">Lines</p><p class="bs-val al1">1 · 6</p><p class="bs-note">Blue &amp; brown</p></div>
+      <div class="bs"><p class="bs-label">Max commute</p><p class="bs-val ago">60 min</p><p class="bs-note">to KHU Seoul Campus</p></div>
+      <div class="bs"><p class="bs-label">Monthly budget</p><p class="bs-val">₩1M</p><p class="bs-note">rent only</p></div>
+      <div class="bs"><p class="bs-label">Duration</p><p class="bs-val al6">4–6 mo</p><p class="bs-note">one semester</p></div>
     </div>
-    <div class="board-line" role="presentation"><div class="bl-l1"></div><div class="bl-mid"></div><div class="bl-l6"></div></div>
+    <div class="board-line"><div class="bl-l1"></div><div class="bl-mid"></div><div class="bl-l6"></div></div>
   </div>
 
-  <div class="warn">
-    <strong>Snapshot 2026-06-23.</strong> Individual listing links can expire within days. Neighbourhood &ldquo;Search rooms&rdquo; links stay live. Always verify price and availability on the platform before contacting anyone.
+  <p class="build-stamp" id="build-stamp">마지막 업데이트: —</p>
+
+  <div class="warn" role="alert">
+    <strong>단기·외국인 직접계약 가능 매물만</strong> 포함 (33m2·LiveAnywhere·Wehome·Airbnb). 직방·다방 등 일반 월세(1년 계약·큰 보증금·ARC 필요)는 제외. 스냅샷 날짜 이후 가격이 변경됐을 수 있으니 플랫폼에서 반드시 확인.
   </div>
 
-  <!-- Featured listings -->
-  <section aria-labelledby="s1">
+  <!-- Listings table -->
+  <section aria-labelledby="s-listings">
     <div class="sh">
-      <h2 id="s1">Concrete listings found today</h2>
-      <span class="stag">snapshot 2026-06-23 &middot; may expire</span>
+      <h2 id="s-listings">Confirmed listings</h2>
+      <span class="stag" id="snap-label">snapshot 2026-06-23</span>
     </div>
-    <div class="feat-grid">
 
-      <div class="fcard top">
-        <span class="fcard-badge"><span class="pulse-dot"></span>BEST PRICE</span>
-        <p class="fcard-name">Hoegi-dong full-option studio</p>
-        <p class="fcard-plat">33m2 (&#49340;&#49340;&#50656;&#53664;) &middot; English app &middot; foreign card OK</p>
-        <p class="fcard-price"><sup>&#8361;</sup>740,000<span class="pm"> / mo &nbsp;(&#8361;170k/wk)</span></p>
-        <div class="fcard-tags">
-          <span class="pill l1">Line 1 &mdash; Hoegi Stn</span>
-          <span class="pill ok">KHU back gate &mdash; 2 min walk</span>
-          <span class="pill">13 m&sup2;</span>
-          <span class="pill">Deposit &#8361;330,000</span>
-        </div>
-        <p class="fcard-details">
-          <strong>Included:</strong> Bed, wardrobe, desk, fridge, microwave, washer, A/C, door-lock, CCTV.<br>
-          <strong>Bills:</strong> Electricity &middot; water &middot; gas &middot; internet all included.<br>
-          Min 2 weeks. 5% off for 8+ weeks. No ARC needed.
-        </p>
-        <div class="fcard-links">
-          <a class="btn btn-p" href="https://web.33m2.co.kr/guest/room/47052" target="_blank" rel="noopener">View listing</a>
-          <a class="btn btn-g" href="https://map.naver.com/p/search/%EA%B2%BD%ED%9D%AC%EB%8C%80%ED%95%99%EA%B5%90%20%ED%9B%84%EB%AC%B8" target="_blank" rel="noopener">Naver Map</a>
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">Line</span>
+        <div class="btn-seg" id="line-filter">
+          <button class="active" data-val="all">All</button>
+          <button data-val="1">Line 1</button>
+          <button data-val="6">Line 6</button>
         </div>
       </div>
-
-      <div class="fcard">
-        <p class="fcard-name">Hoegi-dong full-option studio &mdash; larger</p>
-        <p class="fcard-plat">33m2 (&#49340;&#49340;&#50656;&#53664;) &middot; English app &middot; foreign card OK</p>
-        <p class="fcard-price"><sup>&#8361;</sup>880,000<span class="pm"> / mo &nbsp;(&#8361;220k/wk)</span></p>
-        <div class="fcard-tags">
-          <span class="pill l1">Line 1 &mdash; Hoegi Stn</span>
-          <span class="pill ok">KHU back gate &mdash; 2 min walk</span>
-          <span class="pill">20 m&sup2;</span>
-          <span class="pill">Deposit &#8361;330,000</span>
-        </div>
-        <p class="fcard-details">
-          <strong>Included:</strong> Bed, wardrobe, desk, fridge, microwave, gas range, washer, water purifier, A/C, WiFi.<br>
-          <strong>Bills:</strong> All included.<br>
-          Same area as above, more floor space. Min 2 weeks; 5% off for 8+ weeks.
-        </p>
-        <div class="fcard-links">
-          <a class="btn btn-p" href="https://web.33m2.co.kr/guest/room/47054" target="_blank" rel="noopener">View listing</a>
-          <a class="btn btn-g" href="https://map.naver.com/p/search/%EA%B2%BD%ED%9D%AC%EB%8C%80%ED%95%99%EA%B5%90%20%ED%9B%84%EB%AC%B8" target="_blank" rel="noopener">Naver Map</a>
-        </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Max rent</span>
+        <input type="range" id="rent-slider" min="40" max="100" value="100" step="5">
+        <span class="rent-val" id="rent-val">≤ ₩100만 / mo</span>
       </div>
-
-      <div class="fcard">
-        <p class="fcard-name">Hoegi / KHU open studio &mdash; lowest monthly</p>
-        <p class="fcard-plat">Daangn (&#45813;&#44ทน;) &middot; Korean only &mdash; bring a helper or agent</p>
-        <p class="fcard-price"><sup>&#8361;</sup>500,000<span class="pm"> / mo</span></p>
-        <div class="fcard-tags">
-          <span class="pill l1">Line 1 &mdash; Hoegi Stn</span>
-          <span class="pill">10&ndash;15 min to KHU</span>
-          <span class="pill">Deposit &#8361;5,000,000</span>
-        </div>
-        <p class="fcard-details">
-          <strong>Lowest rent</strong> &mdash; but only if the &#8361;5M deposit is manageable.<br>
-          Standard 1-year lease; ask the landlord about a 4&ndash;6 month short contract.<br>
-          Needs Korean or an English-speaking agent to negotiate.
-        </p>
-        <div class="fcard-links">
-          <a class="btn btn-p" href="https://www.daangn.com/kr/realty/?in=%ED%9A%8C%EA%B8%B0%EB%8F%99-97&salesType=one_room" target="_blank" rel="noopener">Browse area</a>
-          <a class="btn btn-g" href="https://map.naver.com/p/search/%ED%9A%8C%EA%B8%B0%EC%97%AD" target="_blank" rel="noopener">Naver Map</a>
-        </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Sort by</span>
+        <select id="sort-sel">
+          <option value="rent">Rent (low→high)</option>
+          <option value="rent-d">Rent (high→low)</option>
+          <option value="commute">Commute (fast→slow)</option>
+          <option value="size">Size (large→small)</option>
+          <option value="deposit">Deposit (low→high)</option>
+        </select>
       </div>
-
+      <div class="ctrl-group">
+        <span class="ctrl-label">Search</span>
+        <input type="text" id="search-input" placeholder="station, area, option…" autocomplete="off">
+      </div>
+      <div class="ctrl-spacer"></div>
+      <button class="btn btn-xl" id="xl-btn" onclick="downloadExcel()">⬇ Excel</button>
     </div>
-  </section>
 
-  <!-- Neighbourhood guide -->
-  <section aria-labelledby="s2">
-    <div class="sh">
-      <h2 id="s2">Neighbourhood guide &mdash; live search links</h2>
-      <span class="stag">closest &rarr; cheaper</span>
+    <div class="result-bar">
+      <span class="result-count" id="result-count"><strong>—</strong> listings found</span>
     </div>
-    <div class="twrap">
-      <table>
-        <thead><tr>
-          <th>Area</th><th>Line(s)</th><th>Nearest station</th>
-          <th>Commute to KHU</th><th>Typical rent&nbsp;/&nbsp;mo</th>
-          <th>Nearest landmark</th><th>Search rooms</th><th>Map</th>
-        </tr></thead>
-        <tbody>
+
+    <div class="twrap" id="table-wrap">
+      <table id="listings-table">
+        <thead>
           <tr>
-            <td data-label="Area"><div class="area-cell"><span class="linedot ld-l1" aria-label="Line 1">1</span><div><div class="area-name">Hoegi-dong</div><div class="area-ko">&#54924;&#44592;&#46041;</div></div></div></td>
-            <td data-label="Lines" class="mono">1 &middot; Gyeongui-Jungang &middot; Gyeongchun</td>
-            <td data-label="Station"><a href="https://map.naver.com/p/search/%ED%9A%8C%EA%B8%B0%EC%97%AD" target="_blank" rel="noopener">Hoegi Stn</a></td>
-            <td data-label="Commute" class="cn">&#8776;&nbsp;15 min &mdash; walk or bus</td>
-            <td data-label="Rent" class="mono">&#8361;450k &ndash; 700k</td>
-            <td data-label="Landmark"><a href="https://map.naver.com/p/search/%ED%99%8D%EB%A6%89%EC%88%98%EB%AA%A9%EC%9B%90" target="_blank" rel="noopener">Hongneung Forest</a></td>
-            <td data-label="Search"><a href="https://ziptoss.com/en/map/%ED%9A%8C%EA%B8%B0%EC%97%AD?contract=monthly" target="_blank" rel="noopener">Ziptoss&nbsp;EN</a></td>
-            <td data-label="Map"><a href="https://map.naver.com/p/search/%ED%9A%8C%EA%B8%B0%EB%8F%99" target="_blank" rel="noopener">Open</a></td>
+            <th class="sortable" data-col="rent">Rent / mo</th>
+            <th class="sortable" data-col="deposit">Deposit</th>
+            <th class="sortable" data-col="size">Size</th>
+            <th>Type</th>
+            <th>Floor</th>
+            <th class="sortable" data-col="station">Station</th>
+            <th class="sortable" data-col="commute">Commute</th>
+            <th>Options</th>
+            <th>Utilities</th>
+            <th>Min stay</th>
+            <th>Links</th>
+            <th>Flags</th>
           </tr>
-          <tr>
-            <td data-label="Area"><div class="area-cell"><span class="linedot ld-l1" aria-label="Line 1">1</span><div><div class="area-name">Imun-dong &middot; HUFS</div><div class="area-ko">&#51060;&#47448;&#46041; &middot; &#50808;&#45824;&#50629;</div></div></div></td>
-            <td data-label="Lines" class="mono">1</td>
-            <td data-label="Station"><a href="https://map.naver.com/p/search/%EC%99%B8%EB%8C%80%EC%95%9E%EC%97%AD" target="_blank" rel="noopener">Hankuk Univ.&nbsp;FS Stn</a></td>
-            <td data-label="Commute" class="cn">&#8776;&nbsp;15 min &mdash; via KHU back gate</td>
-            <td data-label="Rent" class="mono">&#8361;450k &ndash; 650k</td>
-            <td data-label="Landmark"><a href="https://map.naver.com/p/search/%ED%95%9C%EA%B5%AD%EC%99%B8%EA%B5%AD%EC%96%B4%EB%8C%80%ED%95%99%EA%B5%90" target="_blank" rel="noopener">Hankuk Univ. of FS</a></td>
-            <td data-label="Search"><a href="https://ziptoss.com/en/map/%EC%99%B8%EB%8C%80%EC%95%9E%EC%97%AD?contract=monthly" target="_blank" rel="noopener">Ziptoss&nbsp;EN</a></td>
-            <td data-label="Map"><a href="https://map.naver.com/p/search/%EC%9D%B4%EB%AC%B8%EB%8F%99" target="_blank" rel="noopener">Open</a></td>
-          </tr>
-          <tr>
-            <td data-label="Area"><div class="area-cell"><span class="linedot ld-l1" aria-label="Line 1">1</span><div><div class="area-name">Cheongnyangni</div><div class="area-ko">&#52397;&#47049;&#47532;</div></div></div></td>
-            <td data-label="Lines" class="mono">1 &middot; Gyeongui-Jungang &middot; Suin-Bundang</td>
-            <td data-label="Station"><a href="https://map.naver.com/p/search/%EC%B2%AD%EB%9F%89%EB%A6%AC%EC%97%AD" target="_blank" rel="noopener">Cheongnyangni Stn</a></td>
-            <td data-label="Commute" class="cm">&#8776;&nbsp;15&ndash;20 min &mdash; 1 stop + bus</td>
-            <td data-label="Rent" class="mono">&#8361;500k &ndash; 750k</td>
-            <td data-label="Landmark"><a href="https://map.naver.com/p/search/%EA%B2%BD%EB%8F%99%EC%8B%9C%EC%9E%A5" target="_blank" rel="noopener">Gyeongdong Market</a></td>
-            <td data-label="Search"><a href="https://ziptoss.com/en/map/%EC%B2%AD%EB%9F%89%EB%A6%AC?contract=monthly" target="_blank" rel="noopener">Ziptoss&nbsp;EN</a></td>
-            <td data-label="Map"><a href="https://map.naver.com/p/search/%EC%B2%AD%EB%9F%89%EB%A6%AC%EB%8F%99" target="_blank" rel="noopener">Open</a></td>
-          </tr>
-          <tr>
-            <td data-label="Area"><div class="area-cell"><span class="linedot ld-l1" aria-label="Line 1">1</span><div><div class="area-name">Sinimun</div><div class="area-ko">&#49888;&#51060;&#47448;</div></div></div></td>
-            <td data-label="Lines" class="mono">1</td>
-            <td data-label="Station"><a href="https://map.naver.com/p/search/%EC%8B%A0%EC%9D%B4%EB%AC%B8%EC%97%AD" target="_blank" rel="noopener">Sinimun Stn</a></td>
-            <td data-label="Commute" class="cm">&#8776;&nbsp;20&ndash;25 min &mdash; 1 stop to Hoegi + bus</td>
-            <td data-label="Rent" class="mono">&#8361;400k &ndash; 600k</td>
-            <td data-label="Landmark"><a href="https://map.naver.com/p/search/%EC%9D%98%EB%A6%89" target="_blank" rel="noopener">Uireung Royal Tomb</a></td>
-            <td data-label="Search"><a href="https://ziptoss.com/en/map/%EC%8B%A0%EC%9D%B4%EB%AC%B8%EC%97%AD?contract=monthly" target="_blank" rel="noopener">Ziptoss&nbsp;EN</a></td>
-            <td data-label="Map"><a href="https://map.naver.com/p/search/%EC%8B%A0%EC%9D%B4%EB%AC%B8%EB%8F%99" target="_blank" rel="noopener">Open</a></td>
-          </tr>
-          <tr>
-            <td data-label="Area"><div class="area-cell"><span class="linedot ld-both" aria-label="Line 1 and 6">&#9679;</span><div><div class="area-name">Seokgye</div><div class="area-ko">&#49437;&#44228; &mdash; L1+L6 transfer</div></div></div></td>
-            <td data-label="Lines" class="mono">1 + 6 &larr; key transfer</td>
-            <td data-label="Station"><a href="https://map.naver.com/p/search/%EC%84%9D%EA%B3%84%EC%97%AD" target="_blank" rel="noopener">Seokgye Stn</a></td>
-            <td data-label="Commute" class="cm">&#8776;&nbsp;25&ndash;30 min &mdash; 2 stops on Line&nbsp;1</td>
-            <td data-label="Rent" class="mono">&#8361;450k &ndash; 650k</td>
-            <td data-label="Landmark"><a href="https://map.naver.com/p/search/%EA%B2%BD%EC%B6%98%EC%84%A0%EC%88%B2%EA%B8%B8" target="_blank" rel="noopener">Gyeongchun Forest Trail</a></td>
-            <td data-label="Search"><a href="https://ziptoss.com/en/map/%EC%84%9D%EA%B3%84%EC%97%AD?contract=monthly" target="_blank" rel="noopener">Ziptoss&nbsp;EN</a></td>
-            <td data-label="Map"><a href="https://map.naver.com/p/search/%EC%84%9D%EA%B3%84%EB%8F%99" target="_blank" rel="noopener">Open</a></td>
-          </tr>
-          <tr>
-            <td data-label="Area"><div class="area-cell"><span class="linedot ld-l1" aria-label="Line 1">1</span><div><div class="area-name">Gwangwoon-dae &middot; Wolgye</div><div class="area-ko">&#44305;&#50868;&#45824; &middot; &#50900;&#44228;</div></div></div></td>
-            <td data-label="Lines" class="mono">1</td>
-            <td data-label="Station"><a href="https://map.naver.com/p/search/%EA%B4%91%EC%9A%B4%EB%8C%80%EC%97%AD" target="_blank" rel="noopener">Gwangwoon-dae Stn</a></td>
-            <td data-label="Commute" class="cm">&#8776;&nbsp;25&ndash;30 min &mdash; 3 stops on Line&nbsp;1</td>
-            <td data-label="Rent" class="mono">&#8361;450k &ndash; 650k</td>
-            <td data-label="Landmark"><a href="https://map.naver.com/p/search/%EA%B2%BD%EC%B6%98%EC%84%A0%EC%88%B2%EA%B8%B8" target="_blank" rel="noopener">Gyeongchun Forest Trail</a></td>
-            <td data-label="Search"><a href="https://ziptoss.com/en/map/%EA%B4%91%EC%9A%B4%EB%8C%80?contract=monthly" target="_blank" rel="noopener">Ziptoss&nbsp;EN</a></td>
-            <td data-label="Map"><a href="https://map.naver.com/p/search/%EC%9B%94%EA%B3%84%EB%8F%99" target="_blank" rel="noopener">Open</a></td>
-          </tr>
-          <tr>
-            <td data-label="Area"><div class="area-cell"><span class="linedot ld-l6" aria-label="Line 6">6</span><div><div class="area-name">Anam &mdash; Korea Univ.</div><div class="area-ko">&#50504;&#50900;</div></div></div></td>
-            <td data-label="Lines" class="mono">6 &rarr; Seokgye &rarr; 1</td>
-            <td data-label="Station"><a href="https://map.naver.com/p/search/%EC%95%88%EC%95%94%EC%97%AD" target="_blank" rel="noopener">Anam Stn</a></td>
-            <td data-label="Commute" class="cm">&#8776;&nbsp;40&ndash;45 min &mdash; transfer at Seokgye</td>
-            <td data-label="Rent" class="mono">&#8361;500k &ndash; 750k</td>
-            <td data-label="Landmark"><a href="https://map.naver.com/p/search/%EA%B3%A0%EB%A0%A4%EB%8C%80%ED%95%99%EA%B5%90" target="_blank" rel="noopener">Korea University</a></td>
-            <td data-label="Search"><a href="https://ziptoss.com/en/map/%EC%95%88%EC%95%94?contract=monthly" target="_blank" rel="noopener">Ziptoss&nbsp;EN</a></td>
-            <td data-label="Map"><a href="https://map.naver.com/p/search/%EC%95%88%EC%95%94%EB%8F%99" target="_blank" rel="noopener">Open</a></td>
-          </tr>
-          <tr>
-            <td data-label="Area"><div class="area-cell"><span class="linedot ld-l6" aria-label="Line 6">6</span><div><div class="area-name">Bomun</div><div class="area-ko">&#48372;&#47456;</div></div></div></td>
-            <td data-label="Lines" class="mono">6 &middot; Ui-Sinseol</td>
-            <td data-label="Station"><a href="https://map.naver.com/p/search/%EB%B3%B4%EB%AC%B8%EC%97%AD" target="_blank" rel="noopener">Bomun Stn</a></td>
-            <td data-label="Commute" class="cm">&#8776;&nbsp;45&ndash;50 min &mdash; transfer at Seokgye</td>
-            <td data-label="Rent" class="mono">&#8361;450k &ndash; 650k</td>
-            <td data-label="Landmark"><a href="https://map.naver.com/p/search/%EB%B3%B4%EB%AC%B8%EC%82%AC" target="_blank" rel="noopener">Bomunsa Temple</a></td>
-            <td data-label="Search"><a href="https://ziptoss.com/en/map/%EB%B3%B4%EB%AC%B8%EC%97%AD?contract=monthly" target="_blank" rel="noopener">Ziptoss&nbsp;EN</a></td>
-            <td data-label="Map"><a href="https://map.naver.com/p/search/%EB%B3%B4%EB%AC%B8%EB%8F%99" target="_blank" rel="noopener">Open</a></td>
-          </tr>
-          <tr>
-            <td data-label="Area"><div class="area-cell"><span class="linedot ld-l6" aria-label="Line 6">6</span><div><div class="area-name">Wolgok &mdash; budget pick</div><div class="area-ko">&#50900;&#44569;</div></div></div></td>
-            <td data-label="Lines" class="mono">6</td>
-            <td data-label="Station"><a href="https://map.naver.com/p/search/%EC%9B%94%EA%B3%A1%EC%97%AD" target="_blank" rel="noopener">Wolgok Stn</a></td>
-            <td data-label="Commute" class="cm">&#8776;&nbsp;40&ndash;45 min &mdash; transfer at Seokgye</td>
-            <td data-label="Rent" class="mono">&#8361;400k &ndash; 600k</td>
-            <td data-label="Landmark"><a href="https://map.naver.com/p/search/%EB%8F%99%EB%8D%95%EC%97%AC%EC%9E%90%EB%8C%80%ED%95%99%EA%B5%90" target="_blank" rel="noopener">Dongduk Women&rsquo;s Univ.</a></td>
-            <td data-label="Search"><a href="https://ziptoss.com/en/map/%EC%9B%94%EA%B3%A1%EC%97%AD?contract=monthly" target="_blank" rel="noopener">Ziptoss&nbsp;EN</a></td>
-            <td data-label="Map"><a href="https://map.naver.com/p/search/%EC%9B%94%EA%B3%A1%EB%8F%99" target="_blank" rel="noopener">Open</a></td>
-          </tr>
-        </tbody>
+        </thead>
+        <tbody id="listings-body"></tbody>
       </table>
     </div>
+    <div class="no-results" id="no-results">No listings match your filters. Try adjusting the rent slider or line filter.</div>
+    <div class="pager" id="pager"></div>
   </section>
 
-  <!-- Platforms -->
-  <section aria-labelledby="s3">
+  <!-- Platform launchers -->
+  <section aria-labelledby="s-launch">
     <div class="sh">
-      <h2 id="s3">English-friendly platforms</h2>
-      <span class="stag">recommended order for a foreign student</span>
+      <h2 id="s-launch">Browse live inventory by area</h2>
+      <span class="stag">always current — links open platform search</span>
     </div>
-    <div class="twrap">
-      <table>
-        <thead><tr>
-          <th>Platform</th><th>English</th><th>Min stay</th><th>Deposit</th><th>Best for</th><th>Open</th>
-        </tr></thead>
-        <tbody>
-          <tr>
-            <td data-label="Platform"><strong>Ziptoss</strong></td>
-            <td data-label="English" class="chk">&#10003; English-only site</td>
-            <td data-label="Min stay" class="mono">1 month</td>
-            <td data-label="Deposit">Negotiable with agent</td>
-            <td data-label="Best for">Signing an English contract with a licensed agent; biggest Seoul network</td>
-            <td data-label="Open"><a href="https://ziptoss.com/en" target="_blank" rel="noopener">Visit</a></td>
-          </tr>
-          <tr>
-            <td data-label="Platform"><strong>33m2 (&#49340;&#49340;&#50656;&#53664;)</strong></td>
-            <td data-label="English" class="chk">&#10003; English app + foreign card</td>
-            <td data-label="Min stay" class="mono">1 week</td>
-            <td data-label="Deposit" class="mono">&#8361;330,000 fixed</td>
-            <td data-label="Best for">Turnkey furnished short stays; most listings; lowest fixed deposit; no ARC needed</td>
-            <td data-label="Open"><a href="https://33m2.co.kr/landing/article_overseas" target="_blank" rel="noopener">Visit</a></td>
-          </tr>
-          <tr>
-            <td data-label="Platform"><strong>LiveAnywhere (&#47532;&#48652;&#50528;&#45768;&#50948;&#50612;)</strong></td>
-            <td data-label="English" class="chk">&#10003; EN / JP / CN</td>
-            <td data-label="Min stay" class="mono">1 month</td>
-            <td data-label="Deposit">Low; escrow safety</td>
-            <td data-label="Best for">Exchange students; email sign-up (no Korean phone), escrow payment, instant foreign card</td>
-            <td data-label="Open"><a href="https://www.liveanywhere.me/en" target="_blank" rel="noopener">Visit</a></td>
-          </tr>
-          <tr>
-            <td data-label="Platform"><strong>Wehome (&#50948;&#54856;)</strong></td>
-            <td data-label="English" class="chk">&#10003; English</td>
-            <td data-label="Min stay" class="mono">Short term</td>
-            <td data-label="Deposit">Varies</td>
-            <td data-label="Best for">Licensed legal homeshare; well-decorated studios and whole units</td>
-            <td data-label="Open"><a href="https://www.wehome.me/" target="_blank" rel="noopener">Visit</a></td>
-          </tr>
-          <tr>
-            <td data-label="Platform"><strong>Airbnb</strong></td>
-            <td data-label="English" class="chk">&#10003; English</td>
-            <td data-label="Min stay" class="mono">Short term</td>
-            <td data-label="Deposit">Varies</td>
-            <td data-label="Best for">Use the Monthly filter; fewer listings than before but still options near Hoegi</td>
-            <td data-label="Open"><a href="https://www.airbnb.com/s/Hoegi--Seoul/homes" target="_blank" rel="noopener">Visit</a></td>
-          </tr>
-        </tbody>
-      </table>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">
+      These links open pre-filtered searches on each platform. Use them to find listings beyond the snapshot above.
+      Most short-stay studios near KHU cost ₩150k–₩250k/week on 33m2 (₩650k–₩1.1M/month) — apply the platform's own price filter.
+    </p>
+    <div class="launcher-grid">
+
+      <div class="lcard">
+        <div class="lcard-head">
+          <span class="linedot ld-1">1</span>
+          <h3>33m2 — Line 1 areas</h3>
+        </div>
+        <div class="lcard-links">
+          <a href="https://33m2.co.kr/search?keyword=회기" target="_blank" rel="noopener">회기 / Hoegi <span class="arrow">↗</span></a>
+          <a href="https://33m2.co.kr/search?keyword=외대앞" target="_blank" rel="noopener">외대앞 / HUFS area <span class="arrow">↗</span></a>
+          <a href="https://33m2.co.kr/search?keyword=청량리" target="_blank" rel="noopener">청량리 / Cheongnyangni <span class="arrow">↗</span></a>
+          <a href="https://33m2.co.kr/search?keyword=신이문" target="_blank" rel="noopener">신이문 / Sinimun <span class="arrow">↗</span></a>
+          <a href="https://33m2.co.kr/search?keyword=광운대" target="_blank" rel="noopener">광운대 / Gwangwoon-dae <span class="arrow">↗</span></a>
+          <a href="https://33m2.co.kr/search?keyword=신설동" target="_blank" rel="noopener">신설동 / Sinseoldong <span class="arrow">↗</span></a>
+        </div>
+      </div>
+
+      <div class="lcard">
+        <div class="lcard-head">
+          <span class="linedot ld-6">6</span>
+          <h3>33m2 — Line 6 areas</h3>
+        </div>
+        <div class="lcard-links">
+          <a href="https://33m2.co.kr/search?keyword=안암" target="_blank" rel="noopener">안암 / Anam (Korea Univ.) <span class="arrow">↗</span></a>
+          <a href="https://33m2.co.kr/search?keyword=보문" target="_blank" rel="noopener">보문 / Bomun <span class="arrow">↗</span></a>
+          <a href="https://33m2.co.kr/search?keyword=월곡" target="_blank" rel="noopener">월곡 / Wolgok <span class="arrow">↗</span></a>
+          <a href="https://33m2.co.kr/search?keyword=신당" target="_blank" rel="noopener">신당 / Sindang <span class="arrow">↗</span></a>
+          <a href="https://33m2.co.kr/search?keyword=동묘앞" target="_blank" rel="noopener">동묘앞 / Dongmyo <span class="arrow">↗</span></a>
+        </div>
+      </div>
+
+      <div class="lcard">
+        <div class="lcard-head">
+          <span style="font-size:18px">🏡</span>
+          <h3>LiveAnywhere</h3>
+        </div>
+        <div class="lcard-links">
+          <a href="https://www.liveanywhere.me/en" target="_blank" rel="noopener">Search all Seoul (EN) <span class="arrow">↗</span></a>
+          <a href="https://m.liveanywhere.me/accommodations?keyword=회기" target="_blank" rel="noopener">회기 / Hoegi <span class="arrow">↗</span></a>
+          <a href="https://m.liveanywhere.me/accommodations?keyword=경희대" target="_blank" rel="noopener">경희대 / KHU area <span class="arrow">↗</span></a>
+          <a href="https://m.liveanywhere.me/accommodations?keyword=안암" target="_blank" rel="noopener">안암 / Anam <span class="arrow">↗</span></a>
+          <a href="https://m.liveanywhere.me/accommodations?keyword=청량리" target="_blank" rel="noopener">청량리 / Cheongnyangni <span class="arrow">↗</span></a>
+        </div>
+      </div>
+
+      <div class="lcard">
+        <div class="lcard-head">
+          <span style="font-size:18px">🏠</span>
+          <h3>Wehome (위홈)</h3>
+        </div>
+        <div class="lcard-links">
+          <a href="https://www.wehome.me/s" target="_blank" rel="noopener">Search Seoul (EN) <span class="arrow">↗</span></a>
+          <a href="https://www.wehome.me/trust/en/officetel_rentals/" target="_blank" rel="noopener">Monthly officetel guide <span class="arrow">↗</span></a>
+        </div>
+      </div>
+
+      <div class="lcard">
+        <div class="lcard-head">
+          <span style="font-size:18px">✈️</span>
+          <h3>Airbnb (monthly)</h3>
+        </div>
+        <div class="lcard-links">
+          <a href="https://www.airbnb.com/s/Hoegi--Seoul/homes?flexible_trip_lengths[]=one_month" target="_blank" rel="noopener">Hoegi monthly <span class="arrow">↗</span></a>
+          <a href="https://www.airbnb.com/s/Cheongnyangni--Seoul/homes?flexible_trip_lengths[]=one_month" target="_blank" rel="noopener">Cheongnyangni monthly <span class="arrow">↗</span></a>
+          <a href="https://www.airbnb.com/s/Anam--Seoul/homes?flexible_trip_lengths[]=one_month" target="_blank" rel="noopener">Anam monthly <span class="arrow">↗</span></a>
+        </div>
+      </div>
+
+      <div class="lcard">
+        <div class="lcard-head">
+          <span style="font-size:18px">🔍</span>
+          <h3>Ziptoss English</h3>
+        </div>
+        <div class="lcard-links">
+          <a href="https://ziptoss.com/en/map/%ED%9A%8C%EA%B8%B0%EC%97%AD?contract=monthly" target="_blank" rel="noopener">Hoegi Stn (EN) <span class="arrow">↗</span></a>
+          <a href="https://ziptoss.com/en/map/%EC%95%88%EC%95%94?contract=monthly" target="_blank" rel="noopener">Anam area (EN) <span class="arrow">↗</span></a>
+          <a href="https://ziptoss.com/en/map/%EC%84%9D%EA%B3%84%EC%97%AD?contract=monthly" target="_blank" rel="noopener">Seokgye Stn (EN) <span class="arrow">↗</span></a>
+          <a href="https://ziptoss.com/en" target="_blank" rel="noopener">Ziptoss main (EN) <span class="arrow">↗</span></a>
+        </div>
+      </div>
+
     </div>
   </section>
 
   <!-- Tips -->
-  <section aria-labelledby="s4">
-    <div class="sh">
-      <h2 id="s4">Things worth knowing before you search</h2>
-    </div>
+  <section aria-labelledby="s-tips">
+    <div class="sh"><h2 id="s-tips">Things to know before you search</h2></div>
     <div class="tips-grid">
       <div class="tip">
-        <h3>Hoegi Station is the direct route</h3>
-        <p>Line&nbsp;1 stops right there, and Gyeongui-Jungang and Gyeongchun lines also serve it. KHU is 15 minutes on foot or one Dongdaemun-01 bus ride. Living near Hoegi keeps the commute under 20 minutes.</p>
+        <h3>Short-stay = monthly premium</h3>
+        <p>Turnkey short-stay studios on 33m2 / LiveAnywhere / Wehome cost more per month than a standard 1-year lease. The confirmed listings here run ₩520k–₩950k/mo — that is the realistic floor for fully-furnished, no-ARC, English-contract rooms.</p>
       </div>
       <div class="tip">
-        <h3>Line 6 always means a transfer</h3>
-        <p>Seokgye Station is where Line&nbsp;6 meets Line&nbsp;1. Any Line-6 neighbourhood (Anam, Bomun, Wolgok) routes through there. Budget 40&ndash;50 minutes total. Worth it if the rent saves &#8361;200k+ per month.</p>
+        <h3>Hoegi Station is the fastest route</h3>
+        <p>Line 1 direct to KHU back gate in 2 minutes on foot (or front gate in 15 min). The confirmed ₩74만 listings are literally at the back gate — hard to beat on price + commute combined.</p>
+      </div>
+      <div class="tip">
+        <h3>Line 6 needs a transfer at Seokgye</h3>
+        <p>Any Line 6 neighbourhood routes through Seokgye to reach Line 1 for KHU. Budget 40–55 minutes total. Prices are lower, but transfer time adds up daily.</p>
       </div>
       <div class="tip">
         <h3>Keep the deposit small</h3>
-        <p>Without an ARC (Alien Registration Card, issued after arrival) many landlords ask for a bigger deposit. 33m2 (&#8361;330k fixed), Ziptoss English contracts, and LiveAnywhere escrow are the safest low-deposit routes.</p>
-      </div>
-      <div class="tip">
-        <h3>Short-stay platforms cost more per month</h3>
-        <p>Fully furnished, bills-included short-stay units run a premium. If a &#8361;5M deposit is manageable, a standard studio via Ziptoss with a negotiated 4&ndash;6 month contract is often cheaper overall.</p>
-      </div>
-      <div class="tip">
-        <h3>Pay through the platform only</h3>
-        <p>Never wire money directly to a landlord before a signed contract. Use the platform&rsquo;s payment flow or escrow. Before signing, check the property register (&#46321;&#44592;&#48512;&#46321;&#48376;) and confirm the agent is licensed (&#44277;&#51064;&#51473;&#44060;&#49324;).</p>
+        <p>33m2 deposit = ₩330,000 fixed. No ARC needed. LiveAnywhere uses escrow. These are the safest low-deposit routes for a foreign student arriving without a Korean credit history.</p>
       </div>
       <div class="tip">
         <h3>Confirm the full-option checklist</h3>
-        <p>Before booking, verify: washer, fridge, A/C, cooker (gas or induction), desk, bed, and WiFi. Ask whether the maintenance fee (&#44288;&#47532;&#48708;) and utilities are separate from the quoted rent.</p>
+        <p>Before booking: washer, fridge, A/C, cooker (gas or induction), desk, bed, and WiFi. Ask whether the maintenance fee (관리비) and utilities are billed separately from quoted rent.</p>
       </div>
       <div class="tip">
-        <h3>Winter gas heating is expensive</h3>
-        <p>Korean apartments use gas floor heating (ondol). In January&ndash;February bills can run &#8361;100&ndash;200k extra per month. Ask who pays, and confirm whether the quoted rent covers gas in winter.</p>
+        <h3>Winter heating (ondol) is expensive</h3>
+        <p>Gas floor heating in January–February can add ₩100k–₩200k/month. Ask who pays gas heating and whether it is included in the quoted weekly price.</p>
+      </div>
+      <div class="tip">
+        <h3>Pay through the platform only</h3>
+        <p>Never wire money directly to a landlord before a signed contract. Use the platform's payment flow. Check the property register (등기부등본) and confirm the agent is licensed (공인중개사) for Ziptoss contracts.</p>
       </div>
     </div>
   </section>
 
   <footer>
-    <p>Built 2026-06-23. Prices are approximate snapshot ranges; short-stay furnished units (33m2, LiveAnywhere, &#8361;330k deposit) typically cost more per month than standard leases. Commute times estimated from Hoegi Station to KHU Seoul Campus.</p>
-    <p class="f-src">Sources:
-      <a href="https://ziptoss.com/en" target="_blank" rel="noopener">Ziptoss</a> &middot;
-      <a href="https://33m2.co.kr/landing/article_overseas" target="_blank" rel="noopener">33m2</a> &middot;
-      <a href="https://www.liveanywhere.me/en" target="_blank" rel="noopener">LiveAnywhere</a> &middot;
-      <a href="https://www.wehome.me/" target="_blank" rel="noopener">Wehome</a> &middot;
-      <a href="https://www.daangn.com/kr/realty/?in=%ED%9A%8C%EA%B8%B0%EB%8F%99-97&salesType=one_room" target="_blank" rel="noopener">Daangn</a> &middot;
-      <a href="https://namu.wiki/w/%EA%B2%BD%ED%9D%AC%EB%8C%80%ED%95%99%EA%B5%90/%EA%B5%90%ED%86%B5%ED%8E%B8" target="_blank" rel="noopener">KHU transport guide</a>
+    <p id="footer-stamp">Built: — · Data snapshot: 2026-06-23</p>
+    <p style="margin-top:6px">
+      Sources:
+      <a href="https://33m2.co.kr/landing/article_overseas" target="_blank" rel="noopener">33m2</a> ·
+      <a href="https://www.liveanywhere.me/en" target="_blank" rel="noopener">LiveAnywhere</a> ·
+      <a href="https://www.wehome.me/" target="_blank" rel="noopener">Wehome</a> ·
+      <a href="https://ziptoss.com/en" target="_blank" rel="noopener">Ziptoss</a> ·
+      <a href="https://namu.wiki/w/경희대학교/교통편" target="_blank" rel="noopener">KHU transport guide</a>
     </p>
   </footer>
 
 </div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const SNAPSHOT = '2026-06-23';
+const PER_PAGE = 25;
+
+const LISTINGS = [
+  {
+    id: '33m2-47052',
+    name: 'Hoegi Studio A',
+    platform: '33m2',
+    url: 'https://web.33m2.co.kr/guest/room/47052',
+    type: 'Studio',
+    size: 13,
+    floor: '3F',
+    deposit: 33,
+    rent: 74,
+    rentNote: '₩170k/wk × 4.33',
+    line: ['1'],
+    station: 'Hoegi',
+    stationKo: '회기역',
+    stationWalk: 10,
+    commute: 15,
+    commuteNote: 'KHU back gate 2-min walk',
+    district: 'Dongdaemun-gu 동대문구',
+    options: ['Bed','Wardrobe','Desk','Fridge','Microwave','Washer','A/C','Door-lock','CCTV'],
+    utilities: ['Electricity','Water','Gas','Internet'],
+    minWeeks: 2,
+    english: true,
+    flags: ['no-arc'],
+    note: 'KHU back gate 2-min walk. 5% off for 8+ weeks. No ARC needed.',
+    naverMap: 'https://map.naver.com/p/search/경희대학교 후문',
+  },
+  {
+    id: '33m2-47054',
+    name: 'Hoegi Studio B',
+    platform: '33m2',
+    url: 'https://web.33m2.co.kr/guest/room/47054',
+    type: 'Studio',
+    size: 20,
+    floor: '3F',
+    deposit: 33,
+    rent: 95,
+    rentNote: '₩220k/wk × 4.33',
+    line: ['1'],
+    station: 'Hoegi',
+    stationKo: '회기역',
+    stationWalk: 10,
+    commute: 15,
+    commuteNote: 'KHU back gate 2-min walk',
+    district: 'Dongdaemun-gu 동대문구',
+    options: ['Bed','Wardrobe','Desk','Fridge','Microwave','Gas range','Washer','Water purifier','A/C','WiFi','Door-lock'],
+    utilities: ['Electricity','Water','Gas','Internet'],
+    minWeeks: 2,
+    english: true,
+    flags: ['no-arc'],
+    note: 'Larger unit. Same area as Studio A. 5% off 8+ weeks.',
+    naverMap: 'https://map.naver.com/p/search/경희대학교 후문',
+  },
+  {
+    id: '33m2-88850',
+    name: 'Imun-dong Studio (외대앞)',
+    platform: '33m2',
+    url: 'https://web.33m2.co.kr/guest/room/88850',
+    type: 'Studio',
+    size: 20,
+    floor: 'B1 반지하',
+    deposit: 33,
+    rent: 74,
+    rentNote: '₩170k/wk + ₩50k mgmt/wk',
+    line: ['1'],
+    station: '외대앞 / 신이문 mid',
+    stationKo: '외대앞역',
+    stationWalk: 10,
+    commute: 20,
+    commuteNote: 'via KHU back gate (~15 min)',
+    district: 'Dongdaemun-gu 동대문구',
+    options: ['Fridge','Washer','A/C','TV','WiFi','Induction','Bed','Door-lock','CCTV','Dining table','Microwave','Rice cooker','Sofa','Wardrobe','Shoe rack','Dryer'],
+    utilities: ['Gas','Water','Electricity'],
+    minWeeks: 1,
+    english: true,
+    flags: ['semi-basement','mgmt-extra'],
+    note: 'Semi-basement (반지하). Management fee ₩50k/wk billed separately. Min 1 week.',
+    naverMap: 'https://map.naver.com/p/search/이문동',
+  },
+  {
+    id: '33m2-44471',
+    name: 'Cheongnyangni Goshiwon',
+    platform: '33m2',
+    url: 'https://web.33m2.co.kr/guest/room/44471',
+    type: 'Goshiwon',
+    size: 17,
+    floor: '3F',
+    deposit: 10,
+    rent: 52,
+    rentNote: '₩120k/wk × 4.33',
+    line: ['1'],
+    station: 'Cheongnyangni',
+    stationKo: '청량리역',
+    stationWalk: 5,
+    commute: 20,
+    commuteNote: '1 stop + 5-min bus',
+    district: 'Dongdaemun-gu 동대문구',
+    options: ['Fridge','Washer','A/C','TV','WiFi','Induction','Bed','Door-lock','CCTV','Desk','Wardrobe','Water purifier'],
+    utilities: ['Gas','Water','Electricity'],
+    minWeeks: 1,
+    english: true,
+    flags: ['women-only','cheapest'],
+    note: 'Women-only (여성전용). Shared bathroom. EN/CN consultation available. Cheapest confirmed listing.',
+    naverMap: 'https://map.naver.com/p/search/청량리역',
+  },
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let lineFilter = 'all';
+let maxRent = 100;
+let sortKey = 'rent';
+let searchQ = '';
+let currentPage = 1;
+let filtered = [];
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const now = new Date();
+  const ts = now.getFullYear() + '-'
+    + String(now.getMonth()+1).padStart(2,'0') + '-'
+    + String(now.getDate()).padStart(2,'0') + ' '
+    + String(now.getHours()).padStart(2,'0') + ':'
+    + String(now.getMinutes()).padStart(2,'0') + ' KST';
+
+  document.getElementById('build-stamp').textContent = '마지막 업데이트: ' + ts;
+  document.getElementById('footer-stamp').textContent = 'Built: ' + ts + ' · Data snapshot: ' + SNAPSHOT;
+
+  // controls
+  document.getElementById('rent-slider').addEventListener('input', e => {
+    maxRent = +e.target.value;
+    document.getElementById('rent-val').textContent = '≤ ₩' + maxRent + '만 / mo';
+    currentPage = 1; render();
+  });
+  document.getElementById('sort-sel').addEventListener('change', e => {
+    sortKey = e.target.value; render();
+  });
+  document.getElementById('search-input').addEventListener('input', e => {
+    searchQ = e.target.value.toLowerCase().trim();
+    currentPage = 1; render();
+  });
+  document.querySelectorAll('#line-filter button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#line-filter button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      lineFilter = btn.dataset.val;
+      currentPage = 1; render();
+    });
+  });
+  document.querySelectorAll('thead th.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      if (sortKey === col) sortKey = col + '-d';
+      else if (sortKey === col + '-d') sortKey = col;
+      else sortKey = col;
+      document.getElementById('sort-sel').value = sortKey;
+      render();
+    });
+  });
+
+  render();
+});
+
+// ── FILTER + SORT ─────────────────────────────────────────────────────────────
+function applyFilter() {
+  filtered = LISTINGS.filter(r => {
+    if (lineFilter !== 'all' && !r.line.includes(lineFilter)) return false;
+    if (r.rent > maxRent) return false;
+    if (searchQ) {
+      const hay = [r.name, r.platform, r.type, r.station, r.stationKo, r.district,
+                   ...r.options, ...r.flags, r.note].join(' ').toLowerCase();
+      if (!hay.includes(searchQ)) return false;
+    }
+    return true;
+  });
+
+  const [col, dir] = sortKey.endsWith('-d') ? [sortKey.slice(0,-2), -1] : [sortKey, 1];
+  filtered.sort((a, b) => {
+    let av = a[col], bv = b[col];
+    if (col === 'station') { av = a.station.toLowerCase(); bv = b.station.toLowerCase(); }
+    if (typeof av === 'string') return dir * av.localeCompare(bv);
+    return dir * (av - bv);
+  });
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function render() {
+  applyFilter();
+  document.getElementById('result-count').innerHTML =
+    '<strong>' + filtered.length + '</strong> listing' + (filtered.length !== 1 ? 's' : '') + ' found';
+
+  const body = document.getElementById('listings-body');
+  const noR = document.getElementById('no-results');
+  const wrap = document.getElementById('table-wrap');
+
+  if (filtered.length === 0) {
+    body.innerHTML = '';
+    noR.style.display = 'block';
+    wrap.style.display = 'none';
+  } else {
+    noR.style.display = 'none';
+    wrap.style.display = '';
+    const start = (currentPage - 1) * PER_PAGE;
+    const page = filtered.slice(start, start + PER_PAGE);
+    body.innerHTML = page.map(r => rowHTML(r)).join('');
+  }
+
+  renderPager();
+  updateSortHeaders();
+}
+
+function rowHTML(r) {
+  const lineDots = r.line.map(l => {
+    const cls = l === '1' ? 'ld-1' : l === '6' ? 'ld-6' : 'ld-16';
+    return `<span class="linedot ${cls}" aria-label="Line ${l}">${l}</span>`;
+  }).join('');
+
+  const commuteClass = r.commute <= 20 ? 'commute-ok' : 'commute-mid';
+
+  const flags = r.flags.map(f => {
+    if (f === 'no-arc')        return '<span class="flag flag-ok">No ARC</span>';
+    if (f === 'women-only')    return '<span class="flag flag-warn">Women only</span>';
+    if (f === 'semi-basement') return '<span class="flag flag-warn">반지하</span>';
+    if (f === 'mgmt-extra')    return '<span class="flag flag-warn">+Mgmt fee</span>';
+    if (f === 'cheapest')      return '<span class="flag flag-ok">Cheapest</span>';
+    return '';
+  }).join(' ');
+
+  const opts = r.options.slice(0, 6).join(', ') + (r.options.length > 6 ? `… +${r.options.length-6}` : '');
+  const utils = r.utilities.join(', ');
+
+  return `<tr>
+    <td data-label="Rent/mo"><span class="rent-cell">₩${r.rent}만</span><br><span style="font-size:11px;color:var(--muted)">${r.rentNote}</span></td>
+    <td data-label="Deposit" class="dep-cell">₩${r.deposit}만</td>
+    <td data-label="Size" class="mono">${r.size} m²</td>
+    <td data-label="Type">${r.type}</td>
+    <td data-label="Floor" class="mono">${r.floor}</td>
+    <td data-label="Station"><div class="station-cell">${lineDots}<span>${r.station}<br><span style="font-size:11px;color:var(--muted)">${r.stationKo} · ${r.stationWalk}min walk</span></span></div></td>
+    <td data-label="Commute"><span class="${commuteClass}">~${r.commute} min</span><br><span style="font-size:11px;color:var(--muted)">${r.commuteNote}</span></td>
+    <td data-label="Options"><span class="opt-list">${opts}</span></td>
+    <td data-label="Utilities"><span class="opt-list">${utils}</span></td>
+    <td data-label="Min stay" class="mono">${r.minWeeks}w</td>
+    <td data-label="Links"><div class="link-cell">
+      <a href="${r.url}" target="_blank" rel="noopener">View listing ↗</a>
+      <a href="${r.naverMap}" target="_blank" rel="noopener">Naver Map ↗</a>
+    </div></td>
+    <td data-label="Flags">${flags}</td>
+  </tr>`;
+}
+
+// ── PAGINATION ────────────────────────────────────────────────────────────────
+function renderPager() {
+  const pager = document.getElementById('pager');
+  const total = Math.ceil(filtered.length / PER_PAGE);
+  if (total <= 1) { pager.innerHTML = ''; return; }
+
+  let html = `<button ${currentPage===1?'disabled':''} onclick="goPage(${currentPage-1})">‹</button>`;
+  for (let i = 1; i <= total; i++) {
+    html += `<button class="${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  }
+  html += `<button ${currentPage===total?'disabled':''} onclick="goPage(${currentPage+1})">›</button>`;
+  html += `<span class="pager-info">${(currentPage-1)*PER_PAGE+1}–${Math.min(currentPage*PER_PAGE,filtered.length)} of ${filtered.length}</span>`;
+  pager.innerHTML = html;
+}
+
+function goPage(p) { currentPage = p; render(); window.scrollTo({top: document.getElementById('s-listings').offsetTop - 20, behavior:'smooth'}); }
+
+// ── SORT HEADERS ──────────────────────────────────────────────────────────────
+function updateSortHeaders() {
+  document.querySelectorAll('thead th.sortable').forEach(th => {
+    th.classList.remove('sort-asc','sort-desc');
+    const col = th.dataset.col;
+    if (sortKey === col) th.classList.add('sort-asc');
+    if (sortKey === col + '-d') th.classList.add('sort-desc');
+  });
+}
+
+// ── EXCEL DOWNLOAD ────────────────────────────────────────────────────────────
+function downloadExcel() {
+  const BOM = '﻿';
+  const cols = ['Name','Platform','Type','Size (m²)','Floor','Rent (만원/mo)','Rent note','Deposit (만원)',
+                 'Station','Line','Station walk (min)','Commute to KHU (min)','Commute note',
+                 'District','Options','Utilities','Min weeks','English OK','Flags','Link','Naver Map','Note'];
+  const rows = filtered.map(r => [
+    r.name, r.platform, r.type, r.size, r.floor, r.rent, r.rentNote, r.deposit,
+    r.station, r.line.join('+'), r.stationWalk, r.commute, r.commuteNote,
+    r.district, r.options.join(', '), r.utilities.join(', '), r.minWeeks,
+    r.english ? 'Yes' : 'No', r.flags.join(', '), r.url, r.naverMap, r.note
+  ].map(v => typeof v === 'string' && v.includes('\t') ? '"'+v+'"' : v));
+
+  const tsv = BOM + [cols, ...rows].map(row => row.join('\t')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:application/vnd.ms-excel;charset=utf-8,' + encodeURIComponent(tsv);
+  a.download = 'seoul-rooms-' + SNAPSHOT + '.xls';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+</script>
