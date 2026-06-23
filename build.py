@@ -254,7 +254,12 @@ section{{margin:36px 0}}
 h2{{font-size:clamp(18px,3.5vw,23px);margin:0 0 4px;color:var(--hero);display:flex;align-items:center;gap:9px}}
 h2 .dot{{width:10px;height:10px;border-radius:50%;background:var(--acc)}}
 .sub{{color:var(--mut);font-size:14px;margin:0 0 14px}}
+.table-outer{{position:relative;border-radius:14px}}
 .tablewrap{{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel);box-shadow:0 1px 4px rgba(0,0,0,.06)}}
+.scroll-fade{{position:absolute;top:0;right:0;bottom:0;width:90px;background:linear-gradient(to right,transparent,rgba(255,255,255,.97));border-radius:0 14px 14px 0;pointer-events:none;transition:opacity .25s;z-index:1}}
+.scroll-tip{{position:absolute;top:10px;right:10px;background:var(--acc);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;pointer-events:none;white-space:nowrap;transition:opacity .25s;z-index:2;box-shadow:0 1px 4px rgba(0,85,204,.3)}}
+.table-outer.at-end .scroll-fade{{opacity:0}}
+.table-outer.at-end .scroll-tip{{opacity:0}}
 table{{width:100%;border-collapse:collapse;font-size:14px}}
 th,td{{text-align:left;padding:12px 15px;border-bottom:1px solid var(--line);vertical-align:top}}
 th{{background:var(--soft);color:var(--mut);font-weight:700;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;position:sticky;top:0;white-space:nowrap;user-select:none}}
@@ -299,6 +304,7 @@ footer{{margin-top:48px;color:var(--mut);font-size:12.5px;border-top:1px solid v
   td::before{{content:attr(data-label);color:var(--mut);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;flex:0 0 42%}}
   td a{{white-space:normal;text-align:right}}
   .tablewrap{{border:none;background:transparent;overflow:visible;box-shadow:none}}
+  .scroll-fade,.scroll-tip{{display:none}}
 }}
 </style>
 
@@ -320,28 +326,28 @@ footer{{margin-top:48px;color:var(--mut);font-size:12.5px;border-top:1px solid v
 <section>
   <h2><span class="dot"></span>Featured live listings <span style="font-weight:400;color:var(--mut);font-size:13px">(snapshot {SNAPSHOT})</span></h2>
   <p class="sub">Concrete units found today, sorted by total monthly cost (rent + 관리비), budget ≤ ₩1,200,000. Open the link to confirm availability.</p>
-  <div class="tablewrap"><table id="feat-table">
+  <div class="table-outer"><div class="scroll-fade"></div><div class="scroll-tip">scroll ›</div><div class="tablewrap"><table id="feat-table">
   <thead>{sortable_th(["Listing + Links","Type","Monthly rent","Total /mo","Deposit","Size","Station","Commute","Options","Notes"])}</thead>
   <tbody>{feat_rows}</tbody>
-  </table></div>
+  </table></div></div>
 </section>
 
 <section>
   <h2><span class="dot"></span>Neighborhood guide — live search links</h2>
   <p class="sub">Each row links to live, filtered listings (Ziptoss English) plus a Naver Map pin for the area and its landmark. Sorted closest → cheaper. All are within 1 hour of KHU.</p>
-  <div class="tablewrap"><table>
+  <div class="table-outer"><div class="scroll-fade"></div><div class="scroll-tip">scroll ›</div><div class="tablewrap"><table>
   {th(["Area","Nearest station","Line(s)","Commute to KHU","Typical rent / mo","Nearest landmark","Ziptoss (EN)","Map","Landmark map","Notes"])}
   {area_rows}
-  </table></div>
+  </table></div></div>
 </section>
 
 <section>
   <h2><span class="dot"></span>English-friendly platforms</h2>
   <p class="sub">Recommended order for an exchange student. Ziptoss & 33m2 first; LiveAnywhere for the safest foreigner flow.</p>
-  <div class="tablewrap"><table>
+  <div class="table-outer"><div class="scroll-fade"></div><div class="scroll-tip">scroll ›</div><div class="tablewrap"><table>
   {th(["Platform","English","Min stay","Deposit","Best for","Open"])}
   {plat_rows}
-  </table></div>
+  </table></div></div>
 </section>
 
 <section>
@@ -359,6 +365,20 @@ footer{{margin-top:48px;color:var(--mut);font-size:12.5px;border-top:1px solid v
 </div>
 <script>
 (function(){{
+  /* ---- scroll fade indicators ---- */
+  document.querySelectorAll('.table-outer').forEach(function(outer) {{
+    var wrap = outer.querySelector('.tablewrap');
+    if (!wrap) return;
+    function upd() {{
+      var atEnd = wrap.scrollLeft + wrap.clientWidth >= wrap.scrollWidth - 4;
+      outer.classList.toggle('at-end', atEnd);
+    }}
+    wrap.addEventListener('scroll', upd, {{passive:true}});
+    window.addEventListener('resize', upd, {{passive:true}});
+    upd();
+  }});
+
+  /* ---- sortable featured table ---- */
   var tbl = document.getElementById('feat-table');
   if (!tbl) return;
   var thead = tbl.querySelector('thead tr');

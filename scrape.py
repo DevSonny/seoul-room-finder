@@ -245,7 +245,7 @@ def main():
     print(f"Total unique rooms: {len(all_rooms)}")
 
     # 2. Geo filter + type filter
-    EXCLUDED_TYPES = {"GOSHIWON", "고시원", "SHARE_HOUSE", "셰어하우스", "하숙", "하숙집", "BOARDING"}
+    EXCLUDED_TYPES = {"GOSHIWON", "고시원", "SHARE_HOUSE", "셰어하우스", "쉐어하우스", "하숙", "하숙집", "BOARDING", "Share house"}
     geo_ok = []
     for rid, r in all_rooms.items():
         if r.get("propertyType", "") in EXCLUDED_TYPES:
