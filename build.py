@@ -305,18 +305,45 @@ a:hover{{text-decoration:underline}}
 .card p{{margin:0;color:var(--mut);font-size:13.5px}}
 .note{{background:var(--warn-bg);border:1px solid var(--warn-border);color:var(--warn);border-radius:12px;padding:12px 16px;font-size:13px;margin-top:12px}}
 footer{{margin-top:48px;color:var(--mut);font-size:12.5px;border-top:1px solid var(--line);padding-top:18px}}
-@media (max-width:760px){{
-  table{{min-width:0}}
-  thead{{display:none}}
-  table,tbody,tr,td{{display:block;width:100%}}
-  tr{{border:1px solid var(--line);border-radius:12px;margin:12px 0;background:var(--panel);box-shadow:0 1px 3px rgba(0,0,0,.05)}}
-  tr:hover td{{background:transparent}}
-  td{{border:none;border-bottom:1px solid var(--line);padding:10px 14px;display:flex;justify-content:space-between;gap:14px}}
-  td.col-name{{min-width:0;font-size:15px}}
-  td:last-child{{border-bottom:none}}
-  td::before{{content:attr(data-label);color:var(--mut);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;flex:0 0 42%}}
-  td a{{white-space:normal;text-align:right}}
-  .tablewrap{{border:none;background:transparent;overflow:visible;box-shadow:none}}
+@media (max-width:640px){{
+  /* layout */
+  .wrap{{padding:12px 12px 48px}}
+  header.hero{{border-radius:12px;padding:18px 16px}}
+  .badges{{gap:6px;margin-top:12px}}
+  .badge{{font-size:12px;padding:5px 10px}}
+  .note{{font-size:12px;padding:10px 12px}}
+  h2{{font-size:17px}}
+  .sub{{font-size:13px}}
+  /* pagination */
+  .pg-bar{{flex-direction:column;align-items:flex-start;gap:8px}}
+  .pg-nav{{flex-wrap:wrap}}
+  .pg-btn{{min-height:40px;padding:6px 16px;font-size:14px}}
+  .pg-page{{min-height:40px;min-width:40px;font-size:14px;padding:6px 8px}}
+  .pg-size-wrap{{font-size:14px}}
+  .pg-size-wrap select{{font-size:14px;padding:6px 10px;min-height:40px}}
+  /* featured table → cards */
+  #feat-table thead{{display:none}}
+  #feat-table,#feat-table tbody,#feat-table tr,#feat-table td{{display:block;width:100%}}
+  .table-outer:has(#feat-table) .tablewrap{{overflow:visible;border:none;background:transparent;box-shadow:none}}
+  .table-outer:has(#feat-table) .scroll-fade,
+  .table-outer:has(#feat-table) .scroll-tip{{display:none}}
+  #feat-table tr{{border:1px solid var(--line);border-radius:12px;margin:12px 0;background:var(--panel);box-shadow:0 1px 4px rgba(0,0,0,.07);overflow:hidden}}
+  #feat-table tr:hover td{{background:transparent}}
+  #feat-table td{{border:none;border-bottom:1px solid var(--line);padding:8px 14px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px}}
+  #feat-table td:last-child{{border-bottom:none}}
+  #feat-table td::before{{content:attr(data-label);color:var(--mut);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;flex:0 0 36%;padding-top:2px}}
+  /* name cell: full-width header, no label */
+  #feat-table td.col-name{{flex-direction:column;align-items:flex-start;padding:12px 14px}}
+  #feat-table td.col-name::before{{display:none}}
+  #feat-table td.col-name a:first-child{{font-size:15px;font-weight:700;white-space:normal;word-break:break-word;line-height:1.4}}
+  #feat-table .plat-badge{{font-size:12px}}
+  #feat-table .map-btn{{font-size:13px;padding:6px 14px;min-height:36px;display:inline-flex;align-items:center}}
+  #feat-table .row-links{{margin-top:8px}}
+  /* hide verbose columns */
+  #feat-table td:nth-child(8),#feat-table td:nth-child(9){{display:none}}
+  #feat-table td:nth-child(10){{font-size:12.5px}}
+  /* other tables: touch scroll */
+  .tablewrap{{-webkit-overflow-scrolling:touch}}
   .scroll-fade,.scroll-tip{{display:none}}
 }}
 </style>
