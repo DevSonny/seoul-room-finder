@@ -238,9 +238,9 @@ def main():
     if not all_rooms:
         if os.path.exists(out_path):
             print("WARNING: all fetches failed; keeping existing listings.json")
-            sys.exit(1)
-        print("ERROR: all fetches failed and no existing listings.json")
-        sys.exit(1)
+        else:
+            print("WARNING: all fetches failed; build.py will use fallback listings")
+        return
 
     print(f"Total unique rooms: {len(all_rooms)}")
 

@@ -403,7 +403,7 @@ def build_xlsx(path):
 if __name__ == "__main__":
     import os
     here = os.path.dirname(os.path.abspath(__file__))
-    with open(os.path.join(here, "rooms.html"), "w", encoding="utf-8") as f:
+    with open(os.path.join(here, "index.html"), "w", encoding="utf-8") as f:
         f.write(build_html())
     build_xlsx(os.path.join(here, "rooms.xlsx"))
-    print("OK -> rooms.html, rooms.xlsx")
+    print("OK -> index.html, rooms.xlsx")

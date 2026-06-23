@@ -1,8 +1,5 @@
 {
-  "buildCommand": "pip install -r requirements.txt && python3 scrape.py && python3 build.py",
+  "buildCommand": "pip install -r requirements.txt && python3 scrape.py; python3 build.py",
   "outputDirectory": ".",
-  "framework": null,
-  "rewrites": [
-    { "source": "/", "destination": "/rooms.html" }
-  ]
+  "framework": null
 }
