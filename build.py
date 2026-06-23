@@ -5,6 +5,8 @@ Rooms near Kyung Hee University (Seoul) for a one-semester exchange student.
 Snapshot date: 2026-06-23. Prices on platforms change; treat as a guide."""
 
 import html
+import json
+import os
 from urllib.parse import quote
 
 SNAPSHOT = "2026-06-23"
@@ -16,8 +18,8 @@ def ziptoss_en(area):
     return "https://ziptoss.com/en/map/" + quote(area) + "?contract=monthly"
 
 # ---------------------------------------------------------------- DATA
-# Featured concrete listings found on 2026-06-23 (may expire).
-featured = [
+# Fallback listings (used when listings.json is absent or unreadable).
+FALLBACK_FEATURED = [
     {
         "name": "Hoegi-dong full-option studio (KHU 2 min)",
         "platform": "33m2 (English app)",
@@ -64,6 +66,37 @@ featured = [
         "notes": "Lowest monthly rent IF the ₩5M deposit is affordable. Standard 1-yr leases; ask about a one-semester (short) contract.",
     },
 ]
+
+def load_featured():
+    here = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(here, "listings.json")
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+        if not data.get("listings"):
+            return [{**r, "total": ""} for r in FALLBACK_FEATURED]
+        out = []
+        for r in data["listings"]:
+            out.append({
+                "name": r["name"],
+                "platform": r["platform"],
+                "type": r["type"],
+                "rent": r["rent"],
+                "total": r["total_display"],
+                "deposit": r["deposit_display"],
+                "size": r["size"],
+                "station": r["station"],
+                "commute": r["commute"],
+                "options": r["options"],
+                "english": r["english"],
+                "link": r["link"],
+                "naver": r["naver"],
+                "notes": r["notes"],
+            })
+        return out
+    except Exception:
+        return [{**r, "total": ""} for r in FALLBACK_FEATURED]
+
 
 # Neighborhood guide — stable, non-expiring search links.
 areas = [
@@ -146,6 +179,7 @@ def td(label, val, is_link=False, link_text=None):
     return f'<td data-label="{html.escape(label)}">{inner}</td>'
 
 def build_html():
+    featured = load_featured()
     F = []
     for r in featured:
         F.append("<tr>"
@@ -153,6 +187,7 @@ def build_html():
             + td("Platform", r["platform"])
             + td("Type", r["type"])
             + td("Monthly rent", r["rent"])
+            + td("Total /mo (incl 관리비)", r.get("total", ""))
             + td("Deposit", r["deposit"])
             + td("Size", r["size"])
             + td("Nearest station", r["station"])
@@ -250,7 +285,7 @@ footer{{margin-top:40px;color:var(--mut);font-size:12.5px;border-top:1px solid v
     <span class="badge">🚇 Subway <b>Line 1 / Line 6</b></span>
     <span class="badge">⏱ Commute <b>≤ 1 hour</b></span>
     <span class="badge">📅 Stay <b>4–6 months</b></span>
-    <span class="badge">💰 Rent <b>~₩1,000,000 / mo</b> (deposit separate)</span>
+    <span class="badge">💰 관리비 포함 <b>~₩1,200,000 / mo</b></span>
     <span class="badge">🗣 <b>English-friendly</b> platforms</span>
     <span class="badge">🎯 Priority: <b>lower price</b></span>
   </div>
@@ -259,9 +294,9 @@ footer{{margin-top:40px;color:var(--mut);font-size:12.5px;border-top:1px solid v
 
 <section>
   <h2><span class="dot"></span>Featured live listings <span style="font-weight:400;color:var(--mut);font-size:13px">(snapshot {SNAPSHOT})</span></h2>
-  <p class="sub">Concrete units found today, sorted by monthly rent. Open the link to confirm availability.</p>
+  <p class="sub">Concrete units found today, sorted by total monthly cost (rent + 관리비), budget ≤ ₩1,200,000. Open the link to confirm availability.</p>
   <div class="tablewrap"><table>
-  {th(["Listing","Platform","Type","Monthly rent","Deposit","Size","Nearest station","Commute to KHU","Options","English","Listing link","Map","Notes"])}
+  {th(["Listing","Platform","Type","Monthly rent","Total /mo (incl 관리비)","Deposit","Size","Nearest station","Commute to KHU","Options","English","Listing link","Map","Notes"])}
   {feat_rows}
   </table></div>
 </section>
@@ -330,12 +365,13 @@ def build_xlsx(path):
 
     # Sheet 1: Featured
     ws1 = wb.active; ws1.title = "Featured listings"
-    h1 = ["Listing","Platform","Type","Monthly rent","Deposit","Size","Nearest station",
+    featured = load_featured()
+    h1 = ["Listing","Platform","Type","Monthly rent","Total /mo (incl 관리비)","Deposit","Size","Nearest station",
           "Commute to KHU","Options","English","Listing link","Naver Map","Notes"]
-    r1 = [[r["name"],r["platform"],r["type"],r["rent"],r["deposit"],r["size"],r["station"],
+    r1 = [[r["name"],r["platform"],r["type"],r["rent"],r.get("total",""),r["deposit"],r["size"],r["station"],
            r["commute"],r["options"],r["english"],r["link"],r["naver"],r["notes"]] for r in featured]
-    style_sheet(ws1, h1, r1, {11,12}, "Featured live listings — near Kyung Hee University")
-    widths1 = [30,18,16,22,16,14,26,24,46,22,12,12,40]
+    style_sheet(ws1, h1, r1, {12,13}, "Featured live listings — near Kyung Hee University")
+    widths1 = [30,18,16,22,18,16,14,26,24,46,22,12,12,40]
     for i,w in enumerate(widths1,1): ws1.column_dimensions[chr(64+i) if i<=26 else 'A'].width = w
 
     # Sheet 2: Neighborhoods
