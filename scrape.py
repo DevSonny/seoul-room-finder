@@ -425,7 +425,7 @@ def fetch_ziptoss():
                 "address": address,
                 "options": options_str,
                 "english": "Yes — English site, English contract",
-                "link": f"https://ziptoss.com/en/rooms/{pid}",
+                "link": "https://ziptoss.com/en/map/" + quote(nearest_stn or stn) + f"?propertyId={pid}&contract=monthly",
                 "naver": "https://map.naver.com/p/search/" + quote(address if address else stn),
                 "rent": f"₩{rent_monthly:,} / mo",
                 "total_display": f"₩{total_monthly:,} / mo",

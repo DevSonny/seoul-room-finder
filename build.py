@@ -275,6 +275,17 @@ td.col-name a:first-child:hover{{color:var(--acc)}}
 .map-btn{{font-size:12px;padding:2px 8px;border-radius:6px;background:var(--soft);border:1px solid var(--line);color:var(--mut)!important;font-weight:600;white-space:nowrap}}
 .map-btn:hover{{background:var(--line);color:var(--text)!important;text-decoration:none!important}}
 .plat-badge{{font-size:11px;color:var(--mut);font-weight:500;display:block;margin:2px 0 3px}}
+.pg-bar{{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;font-size:13px;color:var(--mut)}}
+.pg-nav{{display:flex;align-items:center;gap:6px}}
+.pg-btn{{background:var(--soft);border:1px solid var(--line);color:var(--text);padding:4px 12px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:600}}
+.pg-btn:disabled{{opacity:.35;cursor:default}}
+.pg-btn:not(:disabled):hover{{background:var(--line)}}
+#pg-pages{{display:flex;gap:4px}}
+.pg-page{{background:var(--soft);border:1px solid var(--line);color:var(--text);padding:4px 10px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:600;min-width:34px;text-align:center}}
+.pg-page.active{{background:var(--acc);color:#fff;border-color:var(--acc)}}
+.pg-page:not(.active):hover{{background:var(--line)}}
+.pg-size-wrap select{{margin-left:4px;padding:4px 8px;border:1px solid var(--line);border-radius:7px;font-size:13px;background:var(--soft);cursor:pointer}}
+.pg-info{{color:var(--mut);font-size:13px}}
 th:nth-child(1){{min-width:260px}}
 th:nth-child(2){{min-width:110px}}
 th:nth-child(3),th:nth-child(4){{min-width:130px}}
@@ -328,6 +339,24 @@ footer{{margin-top:48px;color:var(--mut);font-size:12.5px;border-top:1px solid v
 <section>
   <h2><span class="dot"></span>Featured live listings <span style="font-weight:400;color:var(--mut);font-size:13px">(snapshot {SNAPSHOT})</span></h2>
   <p class="sub">Live units from 33m2 + Ziptoss + Airbnb near KHU, sorted by total monthly cost (rent + 관리비) ≤ ₩1,200,000. Open the link to confirm availability.</p>
+  <div class="pg-bar">
+    <span class="pg-info" id="pg-info"></span>
+    <span class="pg-nav">
+      <button class="pg-btn" id="pg-prev">&#8249; Prev</button>
+      <span id="pg-pages"></span>
+      <button class="pg-btn" id="pg-next">Next &#8250;</button>
+    </span>
+    <span class="pg-size-wrap">Show:
+      <select id="pg-size">
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30" selected>30</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+        <option value="0">All</option>
+      </select>
+    </span>
+  </div>
   <div class="table-outer"><div class="scroll-fade"></div><div class="scroll-tip">scroll ›</div><div class="tablewrap"><table id="feat-table">
   <thead>{sortable_th(["Listing + Links","Type","Monthly rent","Total /mo","Deposit","Size","Station","Commute","Options","Notes"])}</thead>
   <tbody>{feat_rows}</tbody>
@@ -380,12 +409,16 @@ footer{{margin-top:48px;color:var(--mut);font-size:12.5px;border-top:1px solid v
     upd();
   }});
 
-  /* ---- sortable featured table ---- */
+  /* ---- sortable + paginated featured table ---- */
   var tbl = document.getElementById('feat-table');
   if (!tbl) return;
   var thead = tbl.querySelector('thead tr');
   var tbody = tbl.querySelector('tbody');
+  var allRows = Array.from(tbody.rows);
   var sortCol = -1, sortAsc = true;
+  var curPage = 1;
+  var pageSize = 30;
+
   function cellVal(row, col) {{
     var c = row.cells[col];
     return c ? c.textContent.trim() : '';
@@ -394,24 +427,92 @@ footer{{margin-top:48px;color:var(--mut);font-size:12.5px;border-top:1px solid v
     var n = parseFloat(v.replace(/[₩, ]/g,'').split('/')[0]);
     return isNaN(n) ? v : n;
   }}
+
+  function renderPage() {{
+    var total = allRows.length;
+    var size = (pageSize === 0) ? total : pageSize;
+    var totalPages = (pageSize === 0) ? 1 : Math.ceil(total / size);
+    if (curPage > totalPages) curPage = totalPages;
+    if (curPage < 1) curPage = 1;
+    var start = (curPage - 1) * size;
+    var end = (pageSize === 0) ? total : Math.min(start + size, total);
+
+    allRows.forEach(function(r) {{ r.style.display = 'none'; }});
+    allRows.slice(start, end).forEach(function(r) {{ r.style.display = ''; }});
+
+    // info
+    var info = document.getElementById('pg-info');
+    if (info) info.textContent = (start+1) + '–' + end + ' / ' + total + ' listings';
+
+    // page buttons (show max 7 around current)
+    var pagesEl = document.getElementById('pg-pages');
+    if (pagesEl) {{
+      pagesEl.innerHTML = '';
+      if (totalPages > 1) {{
+        var range = [];
+        var delta = 2;
+        for (var i = Math.max(1, curPage-delta); i <= Math.min(totalPages, curPage+delta); i++) range.push(i);
+        if (range[0] > 1) {{ addPageBtn(pagesEl, 1); if (range[0] > 2) addDot(pagesEl); }}
+        range.forEach(function(p) {{ addPageBtn(pagesEl, p); }});
+        if (range[range.length-1] < totalPages) {{
+          if (range[range.length-1] < totalPages-1) addDot(pagesEl);
+          addPageBtn(pagesEl, totalPages);
+        }}
+      }}
+    }}
+
+    var prev = document.getElementById('pg-prev');
+    var next = document.getElementById('pg-next');
+    if (prev) prev.disabled = (curPage <= 1);
+    if (next) next.disabled = (curPage >= totalPages || totalPages <= 1);
+  }}
+
+  function addPageBtn(container, p) {{
+    var btn = document.createElement('button');
+    btn.className = 'pg-page' + (p === curPage ? ' active' : '');
+    btn.textContent = p;
+    btn.addEventListener('click', function() {{ curPage = p; renderPage(); }});
+    container.appendChild(btn);
+  }}
+  function addDot(container) {{
+    var s = document.createElement('span');
+    s.textContent = '…';
+    s.style.cssText = 'padding:4px 2px;color:var(--mut);font-size:13px';
+    container.appendChild(s);
+  }}
+
+  document.getElementById('pg-prev') && document.getElementById('pg-prev').addEventListener('click', function() {{ curPage--; renderPage(); }});
+  document.getElementById('pg-next') && document.getElementById('pg-next').addEventListener('click', function() {{ curPage++; renderPage(); }});
+  var sizeEl = document.getElementById('pg-size');
+  if (sizeEl) {{
+    sizeEl.addEventListener('change', function() {{
+      pageSize = parseInt(this.value);
+      curPage = 1;
+      renderPage();
+    }});
+  }}
+
   Array.from(thead.cells).forEach(function(th, i) {{
     th.addEventListener('click', function() {{
-      var rows = Array.from(tbody.rows);
       var asc = (sortCol === i) ? !sortAsc : true;
-      rows.sort(function(a, b) {{
+      allRows.sort(function(a, b) {{
         var av = numOrStr(cellVal(a, i));
         var bv = numOrStr(cellVal(b, i));
         if (typeof av === 'number' && typeof bv === 'number') return asc ? av-bv : bv-av;
         return asc ? String(av).localeCompare(String(bv),'ko') : String(bv).localeCompare(String(av),'ko');
       }});
-      rows.forEach(function(r) {{ tbody.appendChild(r); }});
+      allRows.forEach(function(r) {{ tbody.appendChild(r); }});
       Array.from(thead.cells).forEach(function(h) {{
         h.classList.remove('sort-asc','sort-desc');
       }});
       th.classList.add(asc ? 'sort-asc' : 'sort-desc');
       sortCol = i; sortAsc = asc;
+      curPage = 1;
+      renderPage();
     }});
   }});
+
+  renderPage();
 }})();
 </script>
 """
