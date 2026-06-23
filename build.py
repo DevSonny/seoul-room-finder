@@ -188,6 +188,7 @@ def build_html():
         name_cell = (
             f'<td data-label="Listing" class="col-name">'
             f'<a href="{html.escape(r["link"])}" target="_blank" rel="noopener">{html.escape(str(r["name"]))}</a>'
+            f'<span class="plat-badge">{html.escape(str(r.get("platform", "")))}</span>'
             f'<span class="row-links">'
             f'<a href="{html.escape(r["naver"])}" target="_blank" rel="noopener" class="map-btn">🗺 Map</a>'
             f'</span></td>'
@@ -273,6 +274,7 @@ td.col-name a:first-child:hover{{color:var(--acc)}}
 .row-links{{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}}
 .map-btn{{font-size:12px;padding:2px 8px;border-radius:6px;background:var(--soft);border:1px solid var(--line);color:var(--mut)!important;font-weight:600;white-space:nowrap}}
 .map-btn:hover{{background:var(--line);color:var(--text)!important;text-decoration:none!important}}
+.plat-badge{{font-size:11px;color:var(--mut);font-weight:500;display:block;margin:2px 0 3px}}
 th:nth-child(1){{min-width:260px}}
 th:nth-child(2){{min-width:110px}}
 th:nth-child(3),th:nth-child(4){{min-width:130px}}
@@ -325,7 +327,7 @@ footer{{margin-top:48px;color:var(--mut);font-size:12.5px;border-top:1px solid v
 
 <section>
   <h2><span class="dot"></span>Featured live listings <span style="font-weight:400;color:var(--mut);font-size:13px">(snapshot {SNAPSHOT})</span></h2>
-  <p class="sub">Concrete units found today, sorted by total monthly cost (rent + 관리비), budget ≤ ₩1,200,000. Open the link to confirm availability.</p>
+  <p class="sub">Live units from 33m2 + Ziptoss + Airbnb near KHU, sorted by total monthly cost (rent + 관리비) ≤ ₩1,200,000. Open the link to confirm availability.</p>
   <div class="table-outer"><div class="scroll-fade"></div><div class="scroll-tip">scroll ›</div><div class="tablewrap"><table id="feat-table">
   <thead>{sortable_th(["Listing + Links","Type","Monthly rent","Total /mo","Deposit","Size","Station","Commute","Options","Notes"])}</thead>
   <tbody>{feat_rows}</tbody>
@@ -360,7 +362,7 @@ footer{{margin-top:48px;color:var(--mut);font-size:12.5px;border-top:1px solid v
 
 <footer>
   Built {SNAPSHOT}. Rent figures are approximate, deposit-based studio ranges; short-stay furnished units (33m2 / LiveAnywhere, ₩330k deposit) run higher per month but need no large deposit.
-  Sources: Ziptoss, 33m2, LiveAnywhere, Wehome, Airbnb, Daangn, Naver Map. Commute times estimated from Hoegi Station.
+  Live listings scraped from: 33m2, Ziptoss, Airbnb. Airbnb prices are per-night×30 estimates only. Commute times estimated from Hoegi Station.
 </footer>
 </div>
 <script>
