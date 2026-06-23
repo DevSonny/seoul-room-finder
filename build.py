@@ -171,6 +171,9 @@ suggestions = [
 def th(cells):
     return "<tr>" + "".join(f"<th>{c}</th>" for c in cells) + "</tr>"
 
+def sortable_th(cells):
+    return "<tr>" + "".join(f'<th class="sortable">{c}</th>' for c in cells) + "</tr>"
+
 def td(label, val, is_link=False, link_text=None):
     if is_link and val:
         inner = f'<a href="{html.escape(val)}" target="_blank" rel="noopener">{html.escape(link_text or "Open")}</a>'
@@ -183,7 +186,7 @@ def build_html():
     F = []
     for r in featured:
         F.append("<tr>"
-            + td("Listing", r["name"])
+            + f'<td data-label="Listing" class="col-name">{html.escape(str(r["name"]))}</td>'
             + td("Platform", r["platform"])
             + td("Type", r["type"])
             + td("Monthly rent", r["rent"])
@@ -234,46 +237,51 @@ def build_html():
 
     return f"""<title>Rooms near Kyung Hee University — Exchange Student Guide</title>
 <style>
-:root{{--bg:#0f1419;--panel:#1a2129;--soft:#232c37;--line:#2e3a47;--text:#e8edf2;--mut:#9bb0c3;--acc:#4cc2ff;--acc2:#7ee787;--warn:#ffcb6b}}
+:root{{--bg:#f8f9fb;--panel:#ffffff;--soft:#f1f3f5;--line:#dee2e6;--text:#212529;--mut:#6c757d;--acc:#0055cc;--acc2:#1a7f4b;--warn:#664d03;--warn-bg:#fff8e1;--warn-border:#ffe082;--hero:#1a3a5c;--hero2:#0f2540}}
 *{{box-sizing:border-box}}
-body{{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;background:var(--bg);color:var(--text);line-height:1.55;-webkit-text-size-adjust:100%}}
-.wrap{{max-width:1180px;margin:0 auto;padding:20px 16px 64px}}
-header.hero{{background:linear-gradient(135deg,#16324a,#1a2129);border:1px solid var(--line);border-radius:16px;padding:26px 22px;margin-bottom:22px}}
-header.hero h1{{margin:0 0 6px;font-size:clamp(20px,4.5vw,30px);line-height:1.2}}
-header.hero p{{margin:4px 0;color:var(--mut);font-size:15px}}
-.badges{{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}}
-.badge{{background:var(--soft);border:1px solid var(--line);color:var(--text);padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600}}
-.badge b{{color:var(--acc2)}}
-section{{margin:30px 0}}
-h2{{font-size:clamp(17px,3.5vw,22px);margin:0 0 4px;display:flex;align-items:center;gap:9px}}
-h2 .dot{{width:9px;height:9px;border-radius:50%;background:var(--acc)}}
-.sub{{color:var(--mut);font-size:13.5px;margin:0 0 14px}}
-.tablewrap{{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel)}}
-table{{width:100%;border-collapse:collapse;font-size:13.5px;min-width:760px}}
-th,td{{text-align:left;padding:11px 13px;border-bottom:1px solid var(--line);vertical-align:top}}
-th{{background:var(--soft);color:var(--mut);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.4px;position:sticky;top:0}}
+body{{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-text-size-adjust:100%}}
+.wrap{{max-width:1280px;margin:0 auto;padding:24px 20px 72px}}
+header.hero{{background:linear-gradient(135deg,var(--hero),var(--hero2));color:#fff;border-radius:18px;padding:28px 26px;margin-bottom:28px;box-shadow:0 2px 12px rgba(0,0,0,.12)}}
+header.hero h1{{margin:0 0 6px;font-size:clamp(22px,4.5vw,32px);line-height:1.2;color:#fff}}
+header.hero p{{margin:4px 0;color:rgba(255,255,255,.75);font-size:15px}}
+.badges{{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}}
+.badge{{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600}}
+.badge b{{color:#7ee8a2}}
+section{{margin:36px 0}}
+h2{{font-size:clamp(18px,3.5vw,23px);margin:0 0 4px;color:var(--hero);display:flex;align-items:center;gap:9px}}
+h2 .dot{{width:10px;height:10px;border-radius:50%;background:var(--acc)}}
+.sub{{color:var(--mut);font-size:14px;margin:0 0 14px}}
+.tablewrap{{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel);box-shadow:0 1px 4px rgba(0,0,0,.06)}}
+table{{width:100%;border-collapse:collapse;font-size:14px}}
+th,td{{text-align:left;padding:12px 15px;border-bottom:1px solid var(--line);vertical-align:top}}
+th{{background:var(--soft);color:var(--mut);font-weight:700;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;position:sticky;top:0;white-space:nowrap;user-select:none}}
+th.sortable{{cursor:pointer}}
+th.sortable:hover{{background:#e9ecef;color:var(--text)}}
+th.sort-asc::after{{content:" ▲";font-size:10px}}
+th.sort-desc::after{{content:" ▼";font-size:10px}}
+td.col-name{{min-width:220px;font-weight:600;color:var(--hero)}}
 tr:last-child td{{border-bottom:none}}
-tr:hover td{{background:#1e2731}}
+tr:hover td{{background:#f8f9ff}}
 a{{color:var(--acc);text-decoration:none;font-weight:600;white-space:nowrap}}
 a:hover{{text-decoration:underline}}
-.cards{{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}}
-.card{{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}}
+.cards{{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}}
+.card{{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:0 1px 3px rgba(0,0,0,.05)}}
 .card h3{{margin:0 0 6px;font-size:15px;color:var(--acc2)}}
 .card p{{margin:0;color:var(--mut);font-size:13.5px}}
-.note{{background:#2a2417;border:1px solid #4a3f23;color:var(--warn);border-radius:12px;padding:12px 15px;font-size:13px;margin-top:10px}}
-footer{{margin-top:40px;color:var(--mut);font-size:12.5px;border-top:1px solid var(--line);padding-top:16px}}
-/* ---- mobile: tables become stacked cards ---- */
+.note{{background:var(--warn-bg);border:1px solid var(--warn-border);color:var(--warn);border-radius:12px;padding:12px 16px;font-size:13px;margin-top:12px}}
+footer{{margin-top:48px;color:var(--mut);font-size:12.5px;border-top:1px solid var(--line);padding-top:18px}}
 @media (max-width:760px){{
   table{{min-width:0}}
   thead{{display:none}}
   table,tbody,tr,td{{display:block;width:100%}}
-  tr{{border:1px solid var(--line);border-radius:12px;margin:12px;background:var(--panel)}}
+  tr{{border:1px solid var(--line);border-radius:12px;margin:12px 0;background:var(--panel);box-shadow:0 1px 3px rgba(0,0,0,.05)}}
   tr:hover td{{background:transparent}}
-  td{{border:none;border-bottom:1px solid var(--line);padding:9px 14px;display:flex;justify-content:space-between;gap:14px}}
+  td{{border:none;border-bottom:1px solid var(--line);padding:10px 14px;display:flex;justify-content:space-between;gap:14px}}
+  td.col-name{{min-width:0;font-size:15px}}
   td:last-child{{border-bottom:none}}
   td::before{{content:attr(data-label);color:var(--mut);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;flex:0 0 42%}}
   td a{{white-space:normal;text-align:right}}
-  .tablewrap{{border:none;background:transparent;overflow:visible}}
+  .tablewrap{{border:none;background:transparent;overflow:visible;box-shadow:none}}
 }}
 </style>
 
@@ -295,9 +303,9 @@ footer{{margin-top:40px;color:var(--mut);font-size:12.5px;border-top:1px solid v
 <section>
   <h2><span class="dot"></span>Featured live listings <span style="font-weight:400;color:var(--mut);font-size:13px">(snapshot {SNAPSHOT})</span></h2>
   <p class="sub">Concrete units found today, sorted by total monthly cost (rent + 관리비), budget ≤ ₩1,200,000. Open the link to confirm availability.</p>
-  <div class="tablewrap"><table>
-  {th(["Listing","Platform","Type","Monthly rent","Total /mo (incl 관리비)","Deposit","Size","Nearest station","Commute to KHU","Options","English","Listing link","Map","Notes"])}
-  {feat_rows}
+  <div class="tablewrap"><table id="feat-table">
+  <thead>{sortable_th(["Listing","Platform","Type","Monthly rent","Total /mo (incl 관리비)","Deposit","Size","Nearest station","Commute to KHU","Options","English","Listing link","Map","Notes"])}</thead>
+  <tbody>{feat_rows}</tbody>
   </table></div>
 </section>
 
@@ -332,6 +340,41 @@ footer{{margin-top:40px;color:var(--mut);font-size:12.5px;border-top:1px solid v
   Sources: Ziptoss, 33m2, LiveAnywhere, Wehome, Airbnb, Daangn, Naver Map. Commute times estimated from Hoegi Station.
 </footer>
 </div>
+<script>
+(function(){{
+  var tbl = document.getElementById('feat-table');
+  if (!tbl) return;
+  var thead = tbl.querySelector('thead tr');
+  var tbody = tbl.querySelector('tbody');
+  var sortCol = -1, sortAsc = true;
+  function cellVal(row, col) {{
+    var c = row.cells[col];
+    return c ? c.textContent.trim() : '';
+  }}
+  function numOrStr(v) {{
+    var n = parseFloat(v.replace(/[₩, ]/g,'').split('/')[0]);
+    return isNaN(n) ? v : n;
+  }}
+  Array.from(thead.cells).forEach(function(th, i) {{
+    th.addEventListener('click', function() {{
+      var rows = Array.from(tbody.rows);
+      var asc = (sortCol === i) ? !sortAsc : true;
+      rows.sort(function(a, b) {{
+        var av = numOrStr(cellVal(a, i));
+        var bv = numOrStr(cellVal(b, i));
+        if (typeof av === 'number' && typeof bv === 'number') return asc ? av-bv : bv-av;
+        return asc ? String(av).localeCompare(String(bv),'ko') : String(bv).localeCompare(String(av),'ko');
+      }});
+      rows.forEach(function(r) {{ tbody.appendChild(r); }});
+      Array.from(thead.cells).forEach(function(h) {{
+        h.classList.remove('sort-asc','sort-desc');
+      }});
+      th.classList.add(asc ? 'sort-asc' : 'sort-desc');
+      sortCol = i; sortAsc = asc;
+    }});
+  }});
+}})();
+</script>
 """
 
 # ---------------------------------------------------------------- EXCEL

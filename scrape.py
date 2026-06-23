@@ -210,7 +210,7 @@ def normalize(rec, detail):
         "options": options,
         "english": "Yes — English app, foreign card OK",
         "link": f"https://web.33m2.co.kr/guest/room/{rid}",
-        "naver": "https://map.naver.com/p/search/" + quote(town),
+        "naver": "https://map.naver.com/p/search/" + quote(address if address else town),
         "rent": f"₩{rent_monthly:,} / mo  (₩{using_fee:,} / week)",
         "total_display": f"₩{total_monthly:,} / mo",
         "deposit_display": f"₩{deposit:,}",
@@ -244,9 +244,12 @@ def main():
 
     print(f"Total unique rooms: {len(all_rooms)}")
 
-    # 2. Geo filter
+    # 2. Geo filter + type filter
+    EXCLUDED_TYPES = {"GOSHIWON", "고시원", "SHARE_HOUSE", "셰어하우스", "하숙", "하숙집", "BOARDING"}
     geo_ok = []
     for rid, r in all_rooms.items():
+        if r.get("propertyType", "") in EXCLUDED_TYPES:
+            continue
         town = r.get("town", "")
         lat = r.get("lat") or 0.0
         lng = r.get("lng") or 0.0
@@ -254,7 +257,7 @@ def main():
             geo_ok.append(r)
         elif lat and lng and haversine(lat, lng, KHU_LAT, KHU_LNG) <= 1.5:
             geo_ok.append(r)
-    print(f"After geo filter: {len(geo_ok)}")
+    print(f"After geo+type filter: {len(geo_ok)}")
 
     # 3. Budget pre-filter on list data
     budget_ok = [
