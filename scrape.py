@@ -406,6 +406,18 @@ def fetch_ziptoss():
             if not near_target_line(nearest_stn, lat, lng):
                 continue
 
+            # Fetch building key for direct building page link
+            bkey = ""
+            try:
+                bkey_url = f"https://ziptoss.com/api/sd/properties/{pid}"
+                bkey_data = _get(bkey_url)
+                bkey = (bkey_data.get("building") or {}).get("key", "")
+                time.sleep(random.uniform(0.3, 0.5))
+            except Exception:
+                pass
+            link = (f"https://ziptoss.com/en/building/{bkey}" if bkey
+                    else "https://ziptoss.com/en/map/" + quote(nearest_stn or stn) + "?contract=monthly")
+
             seen_ids.add(pid)
             listings.append({
                 "id": f"zt_{pid}",
@@ -425,7 +437,7 @@ def fetch_ziptoss():
                 "address": address,
                 "options": options_str,
                 "english": "Yes — English site, English contract",
-                "link": "https://ziptoss.com/en/map/" + quote(nearest_stn or stn) + f"?propertyId={pid}&contract=monthly",
+                "link": link,
                 "naver": "https://map.naver.com/p/search/" + quote(address if address else stn),
                 "rent": f"₩{rent_monthly:,} / mo",
                 "total_display": f"₩{total_monthly:,} / mo",
