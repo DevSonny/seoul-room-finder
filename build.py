@@ -185,20 +185,23 @@ def build_html():
     featured = load_featured()
     F = []
     for r in featured:
+        name_cell = (
+            f'<td data-label="Listing" class="col-name">'
+            f'<a href="{html.escape(r["link"])}" target="_blank" rel="noopener">{html.escape(str(r["name"]))}</a>'
+            f'<span class="row-links">'
+            f'<a href="{html.escape(r["naver"])}" target="_blank" rel="noopener" class="map-btn">🗺 Map</a>'
+            f'</span></td>'
+        )
         F.append("<tr>"
-            + f'<td data-label="Listing" class="col-name">{html.escape(str(r["name"]))}</td>'
-            + td("Platform", r["platform"])
+            + name_cell
             + td("Type", r["type"])
             + td("Monthly rent", r["rent"])
-            + td("Total /mo (incl 관리비)", r.get("total", ""))
+            + td("Total /mo", r.get("total", ""))
             + td("Deposit", r["deposit"])
             + td("Size", r["size"])
-            + td("Nearest station", r["station"])
-            + td("Commute to KHU", r["commute"])
+            + td("Station", r["station"])
+            + td("Commute", r["commute"])
             + td("Options", r["options"])
-            + td("English", r["english"])
-            + td("Listing link", r["link"], True, "View listing")
-            + td("Map", r["naver"], True, "Naver Map")
             + td("Notes", r["notes"])
             + "</tr>")
     feat_rows = "\n".join(F)
@@ -259,7 +262,21 @@ th.sortable{{cursor:pointer}}
 th.sortable:hover{{background:#e9ecef;color:var(--text)}}
 th.sort-asc::after{{content:" ▲";font-size:10px}}
 th.sort-desc::after{{content:" ▼";font-size:10px}}
-td.col-name{{min-width:220px;font-weight:600;color:var(--hero)}}
+td.col-name{{min-width:260px;font-weight:600;color:var(--hero);line-height:1.45}}
+td.col-name a:first-child{{display:block;font-size:14px;color:var(--hero);margin-bottom:5px}}
+td.col-name a:first-child:hover{{color:var(--acc)}}
+.row-links{{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}}
+.map-btn{{font-size:12px;padding:2px 8px;border-radius:6px;background:var(--soft);border:1px solid var(--line);color:var(--mut)!important;font-weight:600;white-space:nowrap}}
+.map-btn:hover{{background:var(--line);color:var(--text)!important;text-decoration:none!important}}
+th:nth-child(1){{min-width:260px}}
+th:nth-child(2){{min-width:110px}}
+th:nth-child(3),th:nth-child(4){{min-width:130px}}
+th:nth-child(5){{min-width:110px}}
+th:nth-child(6){{min-width:70px}}
+th:nth-child(7){{min-width:140px}}
+th:nth-child(8){{min-width:130px}}
+th:nth-child(9){{min-width:200px}}
+th:nth-child(10){{min-width:180px}}
 tr:last-child td{{border-bottom:none}}
 tr:hover td{{background:#f8f9ff}}
 a{{color:var(--acc);text-decoration:none;font-weight:600;white-space:nowrap}}
@@ -304,7 +321,7 @@ footer{{margin-top:48px;color:var(--mut);font-size:12.5px;border-top:1px solid v
   <h2><span class="dot"></span>Featured live listings <span style="font-weight:400;color:var(--mut);font-size:13px">(snapshot {SNAPSHOT})</span></h2>
   <p class="sub">Concrete units found today, sorted by total monthly cost (rent + 관리비), budget ≤ ₩1,200,000. Open the link to confirm availability.</p>
   <div class="tablewrap"><table id="feat-table">
-  <thead>{sortable_th(["Listing","Platform","Type","Monthly rent","Total /mo (incl 관리비)","Deposit","Size","Nearest station","Commute to KHU","Options","English","Listing link","Map","Notes"])}</thead>
+  <thead>{sortable_th(["Listing + Links","Type","Monthly rent","Total /mo","Deposit","Size","Station","Commute","Options","Notes"])}</thead>
   <tbody>{feat_rows}</tbody>
   </table></div>
 </section>
@@ -409,12 +426,12 @@ def build_xlsx(path):
     # Sheet 1: Featured
     ws1 = wb.active; ws1.title = "Featured listings"
     featured = load_featured()
-    h1 = ["Listing","Platform","Type","Monthly rent","Total /mo (incl 관리비)","Deposit","Size","Nearest station",
-          "Commute to KHU","Options","English","Listing link","Naver Map","Notes"]
-    r1 = [[r["name"],r["platform"],r["type"],r["rent"],r.get("total",""),r["deposit"],r["size"],r["station"],
-           r["commute"],r["options"],r["english"],r["link"],r["naver"],r["notes"]] for r in featured]
-    style_sheet(ws1, h1, r1, {12,13}, "Featured live listings — near Kyung Hee University")
-    widths1 = [30,18,16,22,18,16,14,26,24,46,22,12,12,40]
+    h1 = ["Listing","Type","Monthly rent","Total /mo","Deposit","Size","Station",
+          "Commute","Options","Listing link","Naver Map","Notes"]
+    r1 = [[r["name"],r["type"],r["rent"],r.get("total",""),r["deposit"],r["size"],r["station"],
+           r["commute"],r["options"],r["link"],r["naver"],r["notes"]] for r in featured]
+    style_sheet(ws1, h1, r1, {10,11}, "Featured live listings — near Kyung Hee University")
+    widths1 = [36,16,22,18,16,10,28,26,50,14,14,42]
     for i,w in enumerate(widths1,1): ws1.column_dimensions[chr(64+i) if i<=26 else 'A'].width = w
 
     # Sheet 2: Neighborhoods
