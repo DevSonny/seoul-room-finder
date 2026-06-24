@@ -290,8 +290,9 @@ th.sortable:hover{background:#e9ecef;color:var(--text)}
 th.sort-asc::after{content:" ▲";font-size:10px}
 th.sort-desc::after{content:" ▼";font-size:10px}
 td.col-name{min-width:260px;font-weight:600;color:var(--hero);line-height:1.45}
-td.col-name a:first-child{display:block;font-size:14px;color:var(--hero);margin-bottom:5px}
-td.col-name a:first-child:hover{color:var(--acc)}
+td.col-name a:first-of-type{display:block;font-size:14px;color:var(--hero);margin-bottom:5px}
+td.col-name a:first-of-type:hover{color:var(--acc)}
+.row-num{display:inline-block;font-size:11px;font-weight:700;color:var(--mut);background:var(--soft);border:1px solid var(--line);border-radius:4px;padding:1px 6px;margin-bottom:4px;letter-spacing:.3px}
 .row-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .map-btn{font-size:12px;padding:2px 8px;border-radius:6px;background:var(--soft);border:1px solid var(--line);color:var(--mut)!important;font-weight:600;white-space:nowrap}
 .map-btn:hover{background:var(--line);color:var(--text)!important;text-decoration:none!important}
@@ -352,7 +353,7 @@ footer{margin-top:48px;color:var(--mut);font-size:12.5px;border-top:1px solid va
   #feat-table td::before{content:attr(data-label);color:var(--mut);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;flex:0 0 36%;padding-top:2px}
   #feat-table td.col-name{flex-direction:column;align-items:flex-start;padding:12px 14px}
   #feat-table td.col-name::before{display:none}
-  #feat-table td.col-name a:first-child{font-size:15px;font-weight:700;white-space:normal;word-break:break-word;line-height:1.4}
+  #feat-table td.col-name a:first-of-type{font-size:15px;font-weight:700;white-space:normal;word-break:break-word;line-height:1.4}
   #feat-table .plat-badge{font-size:12px}
   #feat-table .map-btn{font-size:13px;padding:6px 14px;min-height:36px;display:inline-flex;align-items:center}
   #feat-table .row-links{margin-top:8px}
@@ -393,8 +394,9 @@ td:last-child{border-bottom:none}
 td::before{content:attr(data-label);color:var(--mut);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;flex:0 0 38%;padding-top:2px;line-height:1.5}
 td.col-name{flex-direction:column;align-items:flex-start;padding:16px 16px 12px}
 td.col-name::before{display:none}
-td.col-name a:first-child{display:block;font-size:20px;font-weight:700;color:var(--hero);line-height:1.4;white-space:normal;word-break:break-word;margin-bottom:6px}
-td.col-name a:first-child:hover{color:var(--acc)}
+td.col-name a:first-of-type{display:block;font-size:20px;font-weight:700;color:var(--hero);line-height:1.4;white-space:normal;word-break:break-word;margin-bottom:6px}
+td.col-name a:first-of-type:hover{color:var(--acc)}
+.row-num{display:inline-block;font-size:13px;font-weight:700;color:var(--mut);background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:3px 10px;margin-bottom:8px}
 .plat-badge{font-size:14px;color:var(--mut);font-weight:500;display:block;margin:2px 0 6px}
 .row-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
 .map-btn{font-size:15px;padding:10px 18px;min-height:44px;border-radius:10px;background:var(--soft);border:1px solid var(--line);color:var(--mut)!important;font-weight:600;white-space:nowrap;display:inline-flex;align-items:center}
@@ -437,9 +439,10 @@ def td(label, val, is_link=False, link_text=None):
 def _build_body(mobile=False):
     featured = load_featured()
     F = []
-    for r in featured:
+    for i, r in enumerate(featured):
         name_cell = (
             f'<td data-label="Listing" class="col-name">'
+            f'<span class="row-num">{i + 1}</span>'
             f'<a href="{html.escape(r["link"])}" target="_blank" rel="noopener">{html.escape(str(r["name"]))}</a>'
             f'<span class="plat-badge">{html.escape(str(r.get("platform", "")))}</span>'
             f'<span class="row-links">'
