@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rooms near Kyung Hee University — Exchange Student Guide</title>
 <style>
 :root{--bg:#f8f9fb;--panel:#ffffff;--soft:#f1f3f5;--line:#dee2e6;--text:#212529;--mut:#6c757d;--acc:#0055cc;--acc2:#1a7f4b;--warn:#664d03;--warn-bg:#fff8e1;--warn-border:#ffe082;--hero:#1a3a5c;--hero2:#0f2540}
@@ -177,15 +182,18 @@ footer{margin-top:48px;color:var(--mut);font-size:12.5px;border-top:1px solid va
   /* notes — muted */
   #feat-table td[data-label="Notes"]{font-size:14px;color:var(--mut)}
 
-  /* hide verbose columns */
-  #feat-table td:nth-child(8),#feat-table td:nth-child(9){display:none}
+  /* hide redundant columns: Type (in title), Commute (in Station), Notes (generic) */
+  #feat-table td:nth-child(2),
+  #feat-table td:nth-child(8),
+  #feat-table td:nth-child(10){display:none}
 
   /* ── other tables: touch scroll ── */
   .tablewrap{-webkit-overflow-scrolling:touch}
   .scroll-fade,.scroll-tip{display:none}
 }
 </style>
-
+</head>
+<body>
 <div class="wrap">
 <header class="hero">
   <h1>🏠 Rooms near Kyung Hee University</h1>
@@ -579,3 +587,5 @@ footer{margin-top:48px;color:var(--mut);font-size:12.5px;border-top:1px solid va
   renderPage();
 })();
 </script>
+</body>
+</html>
